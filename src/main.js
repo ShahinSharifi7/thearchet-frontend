@@ -5,6 +5,7 @@ import './main.css';
 import FontAwesomeIcon from './plugins/fontawesome';
 import "@fortawesome/fontawesome-free/css/all.css";
 import "@fortawesome/fontawesome-free/js/all.js";
+import "@babel/polyfill";
 
 
 const app = createApp(App);

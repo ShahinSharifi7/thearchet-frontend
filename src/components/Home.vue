@@ -3,12 +3,12 @@
     <main class="flex flex-col justify-center items-center">
       <div class="absolute inset-0 w-full h-full bg-[url('@/assets/background.png')] bg-repeat bg-[size:200px] opacity-30 pointer-events-none"></div>
 
-      <div class="relative h-[25vh] flex flex-col justify-center items-center text-white"
+      <div class="relative h-[25vh] min-h-[25dvh] flex flex-col justify-center items-center text-white"
           :class="headerClass"
       >
 
         <!-- Pink Background Layer (Curved Border) -->
-        <div class="absolute top-0 left-0 w-full h-[105%] bg-[#B7372B]"
+        <div class="absolute top-0 left-0 w-full h-[105%] bg-[#B7372B] clipped-bg"
              style="clip-path: ellipse(115% 85% at center top); opacity: 30%"></div>
 
         <!-- Red Foreground Layer -->
@@ -34,7 +34,7 @@
           <img :src="logo" alt="Logo" class="h-[35%] w-auto"/>
 
           <!-- App Name -->
-          <span class="text-[3vh] modak mt-2">Archet</span>
+          <span class="text-lg modak mt-2">Archet</span>
 
         </div>
       </div>
@@ -191,5 +191,9 @@ export default {
 
 .slide-leave-to {
   transform: translateX(100%);
+}
+.clipped-bg {
+ clip-path: ellipse(115% 85% at center top);
+ -webkit-clip-path: ellipse(115% 85% at center top); /* Safari Fix */
 }
 </style>
