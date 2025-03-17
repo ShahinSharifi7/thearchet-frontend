@@ -34,7 +34,7 @@
           <img :src="logo" alt="Logo" class="h-[35%] w-auto"/>
 
           <!-- App Name -->
-          <span class="text-lg modak mt-2">Archet</span>
+          <span class="text-[3dvh] modak mt-2">Archet</span>
 
         </div>
       </div>
@@ -195,5 +195,9 @@ export default {
 .clipped-bg {
  clip-path: ellipse(115% 85% at center top);
  -webkit-clip-path: ellipse(115% 85% at center top); /* Safari Fix */
+}
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 </style>
