@@ -78,6 +78,7 @@
           <span class="text-lg font-medium">Privacy Policy</span>
         </button>
       </div>
+      <div class="h-10"></div>
     </div>
   </div>
 </template>
