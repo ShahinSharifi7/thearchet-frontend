@@ -40,32 +40,39 @@
       </div>
 
 
-      <div class="buttons grid grid-cols-2 gap-4 w-5/6 mt-2 relative">
-        <button
+      <div class="buttons grid grid-cols-2 gap-4 w-full max-w-[500px] mx-auto mt-2">
+      <button
             class="items-center justify-center flex flex-col relative z-10"
             @click="handleInstrumentRecommendation">
-          <img :src="instrumentRecommenderPic" alt="Instrument Recommender" class="h-[35%] w-auto"/>
+          <img :src="instrumentRecommenderPic" alt="Instrument Recommender"
+               class="h-auto w-32 max-w-[70px] sm:max-w-[90px] md:max-w-[90px] object-contain">
+
 
           <span class="font-bold mt-2 text-[#14212A]" :class="textSize">Instrument Recommender</span>
         </button>
         <button
             class="items-center justify-center flex flex-col relative z-10"
             @click="handleMusicPartner">
-          <img :src="musicPartnerPic" alt="Music Partner" class="h-[35%] w-auto"/>
+          <img :src="musicPartnerPic" alt="Music Partner"
+               class="h-auto w-32 max-w-[70px] sm:max-w-[90px] md:max-w-[90px] object-contain">
+
 
           <span class="font-bold mt-2 text-[#14212A]" :class="textSize">Music Partner</span>
         </button>
         <button
             class="items-center justify-center flex flex-col relative z-10"
             @click="handleEvents">
-          <img :src="eventsPic" alt="Events" class="h-[35%] w-auto"/>
+          <img :src="musicPartnerPic" alt="Music Partner"
+               class="h-auto w-32 max-w-[70px] sm:max-w-[90px] md:max-w-[90px] object-contain">
+
 
           <span class="font-bold mt-2 text-[#14212A]" :class="textSize">Events</span>
         </button>
         <button
             class="items-center justify-center flex flex-col relative z-10"
             @click="handleLearning">
-          <img :src="learningPic" alt="Learning" class="h-[35%] w-auto"/>
+          <img :src="learningPic" alt="Learning"
+               class="h-auto w-32 max-w-[70px] sm:max-w-[90px] md:max-w-[90px] object-contain">
 
           <span class="font-bold mt-2 text-[#14212A]" :class="textSize">Learning</span>
         </button>
