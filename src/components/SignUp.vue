@@ -8,7 +8,7 @@
            style="clip-path: ellipse(115% 85% at center top); opacity: 30%"></div>
 
       <!-- Red Foreground Layer -->
-      <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-[rgb(208, 64, 64)]"
+      <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-[#D04040]"
            style="clip-path: ellipse(110% 80% at center top);">
         <!-- Logo -->
         <img :src="logo" alt="Logo" class="h-[35%] w-auto"/>
