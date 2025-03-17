@@ -47,7 +47,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Navigate to frontend directory
-            cd /home/ubuntu/front
+            cd /home/ubuntu/front/thearchet-frontend
             sudo git pull origin main
             sudo npm install
             sudo npm run build  # Build Vue.js
