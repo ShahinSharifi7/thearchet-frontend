@@ -15,7 +15,7 @@
     </div>
     <!-- Header -->
     <div class="flex justify-center items-center h-[10vh] w-full"
-         style="background-color: rgba(192, 0, 0, 0.75); color: white">
+         style="background-color: #D04040; color: white">
       <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
       <span class="text-[3vh] modak">Archet</span>
     </div>
