@@ -91,7 +91,8 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
+        const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+        const response = await axios.post(`${VUE_APP_API_BASE_URL}api/user/login/`, {
           username: this.username,
           password: this.password,
         });

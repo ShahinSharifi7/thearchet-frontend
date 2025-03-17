@@ -149,7 +149,8 @@ export default {
         return;
       }
       try {
-        const response = await axios.post("http://localhost/api/user/register/", {
+        const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+        const response = await axios.post(`${VUE_APP_API_BASE_URL}api/user/register/`, {
           username: this.username,
           email: this.email,
           password: this.password,

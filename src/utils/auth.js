@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8000/api",
+    baseURL: process.env.VUE_APP_API_BASE_URL + "/api",
 });
 
 api.interceptors.request.use(
@@ -38,7 +38,8 @@ api.interceptors.response.use(
                 isRefreshing = true;
                 try {
                     const refreshToken = localStorage.getItem("refresh_token");
-                    const response = await axios.post("http://127.0.0.1:8000/api/token/refresh/", { refresh: refreshToken });
+                    const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+                    const response = await axios.post(`${VUE_APP_API_BASE_URL}api/token/refresh/`, { refresh: refreshToken });
 
                     // Update tokens
                     localStorage.setItem("access_token", response.data.access);
