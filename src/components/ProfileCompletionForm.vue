@@ -8,7 +8,7 @@
     </div>
     <!-- Header -->
     <div class="relative z-20 flex justify-center items-center h-[10vh] w-full mx-1"
-         style="background-color: #D04040; color: white;">
+         style="background-color: #C00000; color: white;">
       <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
       <span class="text-[3vh] modak">Archet</span>
     </div>
