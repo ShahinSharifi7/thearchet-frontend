@@ -6,18 +6,18 @@
         v-if="isLargeScreen"
     >
       <div class="flex-1 overflow-y-auto">
-        <router-view class="bg-white"/>
+      <router-view class="bg-white"/>
       </div>
       <!-- Bottom Navbar inside phone frame -->
-      <BottomNavbar v-if="!hideNavbar" class="w-full z-30"/>
+      <BottomNavbar v-if="!hideNavbar" class="absolute bottom-0 w-full z-30"/>
     </div>
 
     <!-- Fullscreen view on smaller screens -->
     <div class="w-full h-screen flex flex-col" v-else>
       <div class="flex-1 overflow-y-auto">
-        <router-view class="bg-white"/>
+      <router-view class="bg-white"/>
       </div>
-      <BottomNavbar v-if="!hideNavbar" class="fixed bottom-0 w-full z-30"/>
+      <BottomNavbar v-if="!hideNavbar" class="fixed bottom-0 w-full z-30 pb-[env(safe-area-inset-bottom)]"/>
     </div>
   </div>
 </template>
