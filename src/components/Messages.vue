@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center h-full">
     <!-- Header -->
     <div class="flex justify-center items-center h-[10vh] w-full"
-         style="background-color: #D04040; color: white">
+         style="background-color: rgb(208, 64, 64); color: white">
       <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
       <span class="text-[3vh] modak mx-1">Archet</span>
     </div>
