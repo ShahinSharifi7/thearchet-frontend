@@ -92,7 +92,7 @@ export default {
     async handleLogin() {
       try {
         const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
-        const response = await axios.post(`${VUE_APP_API_BASE_URL}/api/user/login/`, {
+        const response = await axios.post(`${VUE_APP_API_BASE_URL}api/user/login/`, {
           username: this.username,
           password: this.password,
         });

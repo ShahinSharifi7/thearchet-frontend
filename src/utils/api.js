@@ -50,17 +50,17 @@ export const hasMatches = async () => {
 }
 
 export const getUserMatches = async () => {
-    const response = await api.get('user/get_matches/');
+    const response = await api.get('/user/get_matches/');
     return response.data;
 }
 
 export const submitMatchingQuestionsAnswers = async (responses) => {
-    const response = await api.post("matching/submit/", {responses});
+    const response = await api.post("/matching/submit/", {responses});
     return response.data;
 }
 
 export const getUserProfileByUsername = async (username) => {
-    const response = await api.get(`user/profile/${username}/`);
+    const response = await api.get(`/user/profile/${username}/`);
     return response.data;
 }
 
@@ -88,3 +88,8 @@ export const removePremium = async () => {
     const response = await api.post("/user/remove-premium/");
     return response.data;
 }
+
+export const fetchMessageDetail = async (messageId) => {
+    const response = await api.get(`/message/${messageId}/`);
+    return response.data;
+};
