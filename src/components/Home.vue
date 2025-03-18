@@ -1,9 +1,9 @@
 <template>
   <div class="home flex flex-col items-center h-full">
-    <main class="flex flex-col justify-center items-center">
+    <main class="flex flex-col justify-center items-center w-full">
       <div class="absolute inset-0 w-full h-full bg-[url('@/assets/background.png')] bg-repeat bg-[size:200px] opacity-30 pointer-events-none"></div>
 
-      <div class="relative h-[25vh] min-h-[25dvh] flex flex-col justify-center items-center text-white"
+      <div class="relative w-full h-[25vh] min-h-[25dvh] flex flex-col justify-center items-center text-white"
           :class="headerClass"
       >
 
