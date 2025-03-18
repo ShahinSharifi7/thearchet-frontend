@@ -1,51 +1,91 @@
 <template>
   <div
       class="h-full flex flex-col items-center overflow-hidden font-sans text-gray-800 tracking-wide bg-[url('@/assets/background-low-op.png')] bg-repeat bg-[size:200px]">
+
     <!-- Header -->
-    <div class="flex justify-center items-center h-[10vh] w-full mx-1"
-         style="background-color: #C00000; color: white">
+    <div class="flex justify-center items-center h-[10vh] w-full mx-1" style="background-color: #C00000; color: white">
       <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
       <span class="text-[3vh] modak">Archet</span>
     </div>
 
-    <!-- Filter Section -->
+    <!-- Tabs -->
+    <div class="tabs flex justify-between w-full bg-[#E9C3BF] shadow-md">
+      <button
+          @click="setActiveTab('online')"
+          :class="activeTab === 'online' ? 'bg-red-500 text-white shadow-lg' : 'bg-[#E9C3BF] text-gray-800 hover:bg-[#d98d89]'"
+          class="py-3 w-1/2 font-semibold transition-all duration-100 rounded-b-2xl">
+        Online Courses
+      </button>
+      <button
+          @click="setActiveTab('offline')"
+          :class="activeTab === 'offline' ? 'bg-red-500 text-white shadow-lg' : 'bg-[#E9C3BF] text-gray-800 hover:bg-[#d98d89]'"
+          class="py-3 w-1/2 font-semibold transition-all duration-100 rounded-b-2xl">
+        Offline Videos
+      </button>
+    </div>
+
+    <!-- Filter Section (Visible for both tabs) -->
     <div class="w-5/6 mt-4 flex flex-col space-y-4">
-      <select v-model="selectedInstrument" class="p-2 border rounded-md w-full" @change="filterVideos">
-        <option value="">All Instruments</option>
+      <select v-model="selectedInstrument" class="p-2 border rounded-md w-full" @change="filterContent">
+        <option value="">Select an Instrument</option>
         <option v-for="instrument in instrumentTypes" :key="instrument" :value="instrument">
           {{ instrument }}
         </option>
       </select>
 
-      <select v-model="selectedLevel" class="p-2 border rounded-md w-full" @change="filterVideos">
-        <option value="">All Levels</option>
+      <select v-model="selectedLevel" class="p-2 border rounded-md w-full" @change="filterContent">
+        <option value="">Select a Level</option>
         <option v-for="level in levels" :key="level" :value="level">
           {{ level }}
         </option>
       </select>
     </div>
 
-    <!-- Video Section -->
-    <div class="h-full flex flex-col w-5/6 space-y-4 mt-4 overflow-y-auto">
+    <!-- Online Courses Section (Visible only for Online Courses) -->
+    <div v-if="activeTab === 'online'" class="w-5/6 mt-8 overflow-y-auto">
+
+      <div v-for="instructor in filteredInstructors" :key="instructor.name"
+           class="items-center bg-white shadow-xl rounded-lg p-2 mb-2 border-2">
+        <div class="flex flex-row items-center space-x-4">
+          <img :src="instructor.profilePic" alt="Instructor" class="w-16 h-16 rounded-full">
+          <div>
+            <h3 class="text-xl font-semibold">{{ instructor.name }}</h3>
+            <p class="text-sm text-gray-600">{{ instructor.schedule }}</p>
+            <p class="text-sm text-gray-600 text-red-600">{{ instructor.instrument }}</p>
+          </div>
+        </div>
+        <button @click="setSchedule(instructor)"
+                class="text-gray-600 text-sm hover:underline w-full bg-white">
+          Set Schedule
+        </button>
+      </div>
+    </div>
+
+    <!-- Video Section (Offline Videos) -->
+    <div v-if="activeTab === 'offline'" class="h-full flex flex-col w-5/6 space-y-4 mt-4 overflow-y-auto">
       <div v-for="video in filteredVideos" :key="video.url"
            class="flex flex-col items-center border rounded-md shadow-lg p-4 bg-white">
-        <h2 class="font-bold text-lg">{{ video.instrument }} - {{ video.level }}</h2>
+        <h2 class="font-bold text-lg text-red-600">{{ video.instrument }} - {{ video.level }}</h2>
         <iframe class="w-full h-64 rounded-md mt-2" :src="video.url" frameborder="0" allowfullscreen></iframe>
       </div>
     </div>
+
     <div style="height: 100px"></div>
   </div>
 </template>
 
 <script>
 import logo from "@/assets/New Logo.png";
+import defaultProfilePic from "@/assets/avatar-default.svg";
 
 export default {
   name: "LearningPage",
   data() {
     return {
       logo: logo,
+      activeTab: 'online',  // Default to 'online' tab
       selectedInstrument: "",
+      defaultProfilePic: defaultProfilePic,
       selectedLevel: "",
       videos: [
         {instrument: "Electric Guitar", level: "Beginner", url: "https://www.youtube.com/embed/RY3AvEGKfZ0"},
@@ -63,7 +103,59 @@ export default {
         {instrument: "Saxophone", level: "Advanced", url: "https://www.youtube.com/embed/atJHtqJfe7s"},
         {instrument: "Drums", level: "Advanced", url: "https://www.youtube.com/embed/X41sRwjMX3U"},
         {instrument: "Piano", level: "Advanced", url: "https://www.youtube.com/embed/mPuxe6BLiTM"}
+      ],
+      instructors: [
+        {
+          name: "John Doe",
+          profilePic: defaultProfilePic,
+          schedule: "From Monday to Friday 10 AM to 6 PM",
+          instrument: "Piano",
+          level: "Beginner",
+        },
+        {
+          name: "Alex Neo",
+          profilePic: defaultProfilePic,
+          schedule: "Saturday - Sunday 10 AM to 8 PM",
+          instrument: "Piano",
+          level: "Beginner",
+        },
+        {
+          name: "Leo James",
+          profilePic: defaultProfilePic,
+          schedule: "From Monday to Wednesday 2 PM to 10 PM",
+          instrument: "Drums and Percussion",
+          level: "Beginner",
+        },
+        {
+          name: "Jane Smith",
+          profilePic: defaultProfilePic,
+          schedule: "Monday to Friday 9 AM to 5 PM",
+          instrument: "Electric Guitar",
+          level: "Advanced"
+        },
+        {
+          name: "Mike Lane",
+          profilePic: defaultProfilePic,
+          schedule: "Monday to Friday 10 AM to 6 PM",
+          instrument: "Acoustic Guitar",
+          level: "Advanced"
+        },
+        {
+          name: "Nina Blue",
+          profilePic: defaultProfilePic,
+          schedule: "Tuesday to Saturday 12 PM to 8 PM",
+          instrument: "Saxophone",
+          level: "Intermediate",
+        },
+        {
+          name: "Carlos Vega",
+          profilePic: defaultProfilePic,
+          schedule: "Monday to Thursday 11 AM to 7 PM",
+          instrument: "Drums",
+          level: "Intermediate",
+        },
       ]
+
     };
   },
   computed: {
@@ -78,16 +170,29 @@ export default {
           (!this.selectedInstrument || video.instrument === this.selectedInstrument) &&
           (!this.selectedLevel || video.level === this.selectedLevel)
       );
+    },
+    filteredInstructors() {
+      return this.instructors.filter(instructor =>
+          (!this.selectedInstrument || instructor.instrument.includes(this.selectedInstrument)) &&
+          (!this.selectedLevel || instructor.level === this.selectedLevel)
+      );
     }
   },
   methods: {
-    filterVideos() {
+    setActiveTab(tab) {
+      this.activeTab = tab;
+    },
+    filterContent() {
       console.log("Filtering by:", this.selectedInstrument, this.selectedLevel);
+    },
+    setSchedule(instructor) {
+      console.log("Setting schedule for:", instructor.name);
+      // You can implement this method to navigate to a scheduling page or pop up a form
     }
   }
 };
 </script>
 
 <style scoped>
-/* Custom styling for learning page */
+/* Add any specific styling for the courses section */
 </style>
