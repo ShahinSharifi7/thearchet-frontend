@@ -19,17 +19,31 @@
 
     <!-- Suggested Instrument Display -->
     <template v-else-if="hasSuggestion">
-      <div class="flex flex-col items-center justify-center h-full">
+      <div class="flex flex-col items-center justify-center h-full overflow-y-auto">
         <h2 class="text-title font-bold">Your Suggested Instrument</h2>
         <img :src="suggestedInstrumentImageUrl" :alt="suggestedInstrument"
-             class="w-64 h-64 mt-4 object-cover"/>
+             class="w-32 h-32 mt-4 object-cover"/>
         <p class="text-lg font-semibold mt-4">{{ suggestedInstrument }}</p>
-        <p class="text-gray-600 mt-2 text-center">Do you want to retake the exam? Click the button below.</p>
+        <p class="text-gray-600 mt-2 text-center">Do you want to retake the exam?</p>
         <button
             @click="retakeExam"
-            class="px-6 py-2 mt-4 bg-black text-white rounded-lg transition-all"
+            class="w-2/5 px-6 py-2 mt-4 bg-black text-white rounded-lg transition-all"
         >
           Retake Exam
+        </button>
+        <p class="text-gray-600 mt-2 text-center">Do you want to Start learning right away?</p>
+        <button
+            @click="toLearning"
+            class="w-2/5 px-6 py-2 mt-4 bg-black text-white rounded-lg transition-all"
+        >
+          Learning
+        </button>
+        <p class="text-gray-600 mt-2 text-center">Are you looking for an instrument to buy?</p>
+        <button
+            @click="toStore"
+            class="w-2/5 px-6 py-2 mt-4 bg-black text-white rounded-lg transition-all"
+        >
+          Store
         </button>
       </div>
     </template>
@@ -163,6 +177,12 @@ export default {
       this.responses = {};
       this.currentIndex = 0;
       this.questions = await fetchInstrumentQuestions();
+    },
+    toStore() {
+      this.$router.push({ name: 'StorePage'});
+    },
+    toLearning() {
+      this.$router.push({ name: 'Learning'});
     }
   },
 };
