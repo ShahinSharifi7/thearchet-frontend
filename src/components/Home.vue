@@ -1,10 +1,11 @@
 <template>
   <div class="home flex flex-col items-center h-full">
     <main class="flex flex-col justify-center items-center w-full">
-      <div class="absolute inset-0 w-full h-full bg-[url('@/assets/background.png')] bg-repeat bg-[size:200px] opacity-30 pointer-events-none"></div>
+      <div
+          class="absolute inset-0 w-full h-full bg-[url('@/assets/background.png')] bg-repeat bg-[size:200px] opacity-30 pointer-events-none"></div>
 
       <div class="relative w-full h-[25vh] min-h-[25dvh] flex flex-col justify-center items-center text-white"
-          :class="headerClass"
+           :class="headerClass"
       >
 
         <!-- Pink Background Layer (Curved Border) -->
@@ -16,8 +17,9 @@
              style="clip-path: ellipse(110% 80% at center top);">
 
           <!-- Premium Button -->
-          <button class="absolute top-6 left-6 bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold text-sm shadow-md hover:bg-yellow-600 transition"
-                  @click="goToPremium">
+          <button
+              class="absolute top-6 left-6 bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold text-sm shadow-md hover:bg-yellow-600 transition"
+              @click="goToPremium">
             🔥 Go Premium
           </button>
 
@@ -41,7 +43,7 @@
 
 
       <div class="buttons grid grid-cols-2 gap-4 w-full max-w-[500px] mx-auto mt-2">
-      <button
+        <button
             class="items-center justify-center flex flex-col relative z-10"
             @click="handleInstrumentRecommendation">
           <img :src="instrumentRecommenderPic" alt="Instrument Recommender"
@@ -79,12 +81,7 @@
       </div>
       <!-- Google Ads Box (Conditionally visible based on Premium Status) -->
       <div v-if="!isPremiumUser" class="w-full bg-white p-4">
-        <div class="flex justify-center">
-          <ins class="adsbygoogle"
-               style="display:block; width: 100%; height: auto;"
-               data-ad-client="ca-pub-7088976414557960"
-               data-ad-format="auto"></ins>
-        </div>
+        <div id="ad-container"></div>
       </div>
 
     </main>
@@ -97,7 +94,7 @@ import instrumentRecommenderPic from "@/assets/instrument finder.png";
 import musicPartnerPic from "@/assets/Matching.png";
 import eventsPic from "@/assets/Events.png";
 import learningPic from "@/assets/Learning.png";
-import { checkProfileCompletion, fetchUserProfile } from "@/utils/api";
+import {checkProfileCompletion, fetchUserProfile} from "@/utils/api";
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import defaultProfilePic from "@/assets/avatar-default.svg";  // Add this import if it's a separate API call
 
@@ -116,34 +113,28 @@ export default {
       username: "",
       isProfileComplete: false,  // Track the profile completion status
       isPremiumUser: false,
+      adsenseContent: '',
     };
   },
   mounted() {
     this.loadProfileData();
-    // Dynamically load the Google Ad script
-    // const script = document.createElement("script");
-    // script.async = true;
-    // script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7088976414557960";
-    // script.crossOrigin = "anonymous";
-    // document.head.appendChild(script);
-    //
-    // // Initialize the ads
-    // script.onload = () => {
-    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
-    // };
-    //
-    // // Add the Google AdSense meta tag to the head
-    // const metaTag = document.createElement("meta");
-    // metaTag.name = "google-adsense-account";
-    // metaTag.content = "ca-pub-7088976414557960";
-    // document.head.appendChild(metaTag);
-    //
-    // // Ensure ad refresh after DOM updates
-    // this.$nextTick(() => {
-    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
-    // });
+    this.loadAd();
   },
   methods: {
+    loadAd() {
+      let adContainer = document.getElementById('ad-container');
+
+      let ins = document.createElement('ins');
+      ins.className = 'adsbygoogle';
+      ins.style.display = 'block';
+      ins.setAttribute('data-ad-client', 'ca-pub-7088976414557960');
+      ins.setAttribute('data-ad-format', 'auto');
+      ins.setAttribute('data-full-width-responsive', 'true');
+      adContainer.appendChild(ins);
+
+
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    },
     goToProfile() {
       this.$router.push('/profile');
     },
@@ -176,7 +167,7 @@ export default {
         this.$router.push('/instrument-recommendation');  // Redirect to question-wizard if profile is complete
       } else {
         // Redirect to the profile page and show a popup for completing the profile
-        this.$router.push({ name: 'Profile', query: { redirectToQuestions: 'true' } });
+        this.$router.push({name: 'Profile', query: {redirectToQuestions: 'true'}});
         this.$nextTick(() => {
           // Show the pop-up (can be handled using a global state or event bus)
           alert("Please complete your profile first in order to use the Instrument Recommendation feature.");
@@ -214,7 +205,7 @@ export default {
     const headerClass = computed(() => (isLargeScreen.value ? "w-full" : "w-screen"));
     const textSize = computed(() => (isLargeScreen.value ? "text-[1.2vh]" : "text-[2.2vh]"));
 
-    return { isLargeScreen, headerClass, textSize };
+    return {isLargeScreen, headerClass, textSize};
   },
 };
 </script>
@@ -232,14 +223,17 @@ export default {
 .slide-leave-to {
   transform: translateX(100%);
 }
+
 .clipped-bg {
- clip-path: ellipse(115% 85% at center top);
- -webkit-clip-path: ellipse(115% 85% at center top); /* Safari Fix */
+  clip-path: ellipse(115% 85% at center top);
+  -webkit-clip-path: ellipse(115% 85% at center top); /* Safari Fix */
 }
+
 .buttons {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
+
 .adsbygoogle {
   max-width: 100%;
   display: block;
