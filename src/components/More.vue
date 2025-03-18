@@ -64,7 +64,7 @@
       </div>
 
       <!-- Help & Support -->
-      <div class="shadow-lg w-5/6 mt-4 mb-20 flex flex-col rounded-md border-2 border-gray-100">
+      <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
         <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
           <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'info']" />
           <span class="text-lg font-medium">Help & Support</span>
@@ -78,6 +78,14 @@
           <span class="text-lg font-medium">Privacy Policy</span>
         </button>
       </div>
+
+      <!-- Logout Button -->
+      <div class="mt-6 w-5/6 mb-20 flex flex-col justify-center">
+        <button @click="logout" class="bg-red-500 text-white w-full py-3 rounded-md font-semibold hover:bg-red-600 transition">
+          Logout
+        </button>
+      </div>
+
       <div class="h-20"></div>
     </div>
   </div>
@@ -119,6 +127,14 @@ export default {
         this.profile_picture = profileData.profile_picture;
       } catch (error) {
         console.error("Failed to load profile data:", error);
+      }
+    },
+    async logout() {
+      try {
+        localStorage.removeItem("authToken");
+        this.$router.push("/login"); // Redirect to login page after logging out
+      } catch (error) {
+        console.error("Failed to logout:", error);
       }
     },
   },
