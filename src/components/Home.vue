@@ -77,6 +77,15 @@
           <span class="font-bold mt-2 text-[#14212A]" :class="textSize">Learning</span>
         </button>
       </div>
+      <!-- Google Ads Box (Conditionally visible based on Premium Status) -->
+      <div v-if="!isPremiumUser" class="w-full bg-white p-4">
+        <div class="flex justify-center">
+          <ins class="adsbygoogle"
+               style="display:block; width: 100%; height: auto;"
+               data-ad-client="ca-pub-7088976414557960"
+               data-ad-format="auto"></ins>
+        </div>
+      </div>
 
     </main>
   </div>
@@ -106,10 +115,33 @@ export default {
       profile_picture: null,  // To store the uploaded file
       username: "",
       isProfileComplete: false,  // Track the profile completion status
+      isPremiumUser: false,
     };
   },
   mounted() {
     this.loadProfileData();
+    // Dynamically load the Google Ad script
+    // const script = document.createElement("script");
+    // script.async = true;
+    // script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7088976414557960";
+    // script.crossOrigin = "anonymous";
+    // document.head.appendChild(script);
+    //
+    // // Initialize the ads
+    // script.onload = () => {
+    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // };
+    //
+    // // Add the Google AdSense meta tag to the head
+    // const metaTag = document.createElement("meta");
+    // metaTag.name = "google-adsense-account";
+    // metaTag.content = "ca-pub-7088976414557960";
+    // document.head.appendChild(metaTag);
+    //
+    // // Ensure ad refresh after DOM updates
+    // this.$nextTick(() => {
+    //   (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // });
   },
   methods: {
     goToProfile() {
@@ -122,6 +154,7 @@ export default {
       try {
         const profileData = await fetchUserProfile();
         this.profile_picture = profileData.profile_picture;
+        this.isPremiumUser = profileData.is_premium;
       } catch (error) {
         console.error("Failed to load profile data:", error);
       }
@@ -206,5 +239,10 @@ export default {
 .buttons {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.adsbygoogle {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 </style>
