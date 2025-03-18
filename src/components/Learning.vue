@@ -33,7 +33,7 @@
         </option>
       </select>
 
-      <select v-model="selectedLevel" class="p-2 border rounded-md w-full" @change="filterContent">
+      <select v-if="activeTab === 'offline'" v-model="selectedLevel" class="p-2 border rounded-md w-full" @change="filterContent">
         <option value="">Select a Level</option>
         <option v-for="level in levels" :key="level" :value="level">
           {{ level }}
@@ -50,7 +50,8 @@
           <img :src="instructor.profilePic" alt="Instructor" class="w-16 h-16 rounded-full">
           <div>
             <h3 class="text-xl font-semibold">{{ instructor.name }}</h3>
-            <p class="text-sm text-gray-600">{{ instructor.schedule }}</p>
+            <p class="text-sm text-gray-600">{{ instructor.scheduleDays }}</p>
+            <p class="text-sm text-gray-600">{{ instructor.scheduleTime }}</p>
             <p class="text-sm text-gray-600 text-red-600">{{ instructor.instrument }}</p>
           </div>
         </div>
@@ -108,53 +109,61 @@ export default {
         {
           name: "John Doe",
           profilePic: defaultProfilePic,
-          schedule: "From Monday to Friday 10 AM to 6 PM",
+          scheduleDays: "Monday to Friday",
+          scheduleTime: "10 AM to 6 PM",
           instrument: "Piano",
           level: "Beginner",
         },
         {
           name: "Alex Neo",
           profilePic: defaultProfilePic,
-          schedule: "Saturday - Sunday 10 AM to 8 PM",
+          scheduleDays: "Saturday - Sunday",
+          scheduleTime: "10 AM to 8 PM",
           instrument: "Piano",
           level: "Beginner",
         },
         {
           name: "Leo James",
           profilePic: defaultProfilePic,
-          schedule: "From Monday to Wednesday 2 PM to 10 PM",
+          scheduleDays: "From Monday to Wednesday",
+          scheduleTime: "2 PM to 10 PM",
           instrument: "Drums and Percussion",
           level: "Beginner",
         },
         {
           name: "Jane Smith",
           profilePic: defaultProfilePic,
-          schedule: "Monday to Friday 9 AM to 5 PM",
+          scheduleDays: "Monday to Friday",
+          scheduleTime: "9 AM to 5 PM",
           instrument: "Electric Guitar",
-          level: "Advanced"
+          level: "Advanced",
         },
         {
           name: "Mike Lane",
           profilePic: defaultProfilePic,
-          schedule: "Monday to Friday 10 AM to 6 PM",
+          scheduleDays: "Monday to Friday",
+          scheduleTime: "10 AM to 6 PM",
           instrument: "Acoustic Guitar",
-          level: "Advanced"
+          level: "Advanced",
         },
         {
           name: "Nina Blue",
           profilePic: defaultProfilePic,
-          schedule: "Tuesday to Saturday 12 PM to 8 PM",
+          scheduleDays: "Tuesday to Saturday",
+          scheduleTime: "12 PM to 8 PM",
           instrument: "Saxophone",
           level: "Intermediate",
         },
         {
           name: "Carlos Vega",
           profilePic: defaultProfilePic,
-          schedule: "Monday to Thursday 11 AM to 7 PM",
+          scheduleDays: "Monday to Thursday",
+          scheduleTime: "11 AM to 7 PM",
           instrument: "Drums",
           level: "Intermediate",
         },
       ]
+
 
     };
   },
@@ -173,8 +182,7 @@ export default {
     },
     filteredInstructors() {
       return this.instructors.filter(instructor =>
-          (!this.selectedInstrument || instructor.instrument.includes(this.selectedInstrument)) &&
-          (!this.selectedLevel || instructor.level === this.selectedLevel)
+          (!this.selectedInstrument || instructor.instrument.includes(this.selectedInstrument))
       );
     }
   },
