@@ -124,7 +124,7 @@ export default {
     loadAd() {
       let adContainer = document.getElementById('ad-container');
 
-      let ins = document.createElement('ins');
+      let ins = document.createElement('script');
       ins.className = 'adsbygoogle';
       ins.style.display = 'block';
       ins.setAttribute('data-ad-client', 'ca-pub-7088976414557960');
