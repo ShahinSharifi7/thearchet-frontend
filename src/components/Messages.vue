@@ -35,7 +35,7 @@
       <ul v-if="activeTab === 'received'" class="space-y-2">
         <li v-for="message in receivedMessages" :key="message.id"
             class="flex items-center bg-white shadow justify-center rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition relative"
-            @click="viewMessage(message)">
+            @click="viewMessage(message.id)">
 
           <!-- Profile Picture -->
           <img :src="message.sender.profile_picture || defaultProfilePic"
@@ -49,7 +49,7 @@
                 {{ truncateText(message.subject) }}
               </h3>
               <span class="text-xs text-gray-500">
-                {{ formatDate(message.date) }}
+                {{ formatDate(message.created_at) }}
               </span>
             </div>
 
@@ -57,15 +57,21 @@
               {{ truncateText(message.text, 40) }}
             </p>
 
-            <!-- Reply Button -->
-<!--            <span @click.stop="replyMessage(message)"-->
-<!--                  class="absolute bottom-2 right-3 text-xs text-blue-500 hover:underline cursor-pointer">-->
-<!--              <font-awesome-icon :icon="['fas', 'reply']" />-->
-<!--            </span>-->
-<!--            &lt;!&ndash; Delete Button &ndash;&gt;-->
-<!--            <button @click.stop="deleteMessage(message.id)" class="absolute bottom-2 right-7 text-red-500 hover:text-red-700 ml-3">-->
-<!--              <i class="fas fa-trash"></i>-->
-<!--            </button>-->
+            <!-- Sender -->
+            <div class="mt-2 text-xs text-gray-600">
+              From: <span class="font-semibold">{{ message.sender.username }}</span>
+            </div>
+
+            <div class="flex space-x-3 absolute bottom-2 right-3">
+              <button @click.stop="replyMessage(message)" class="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1">
+                <font-awesome-icon icon="reply" />
+                Reply
+              </button>
+              <button @click.stop="deleteMessage(message.id)" class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1">
+                <font-awesome-icon icon="trash" />
+                Delete
+              </button>
+            </div>
           </div>
         </li>
       </ul>
@@ -93,12 +99,19 @@
             <p class="text-gray-700 text-sm truncate w-full">
               {{ truncateText(message.text, 40) }}
             </p>
-            <!-- Delete Button -->
-<!--            <button @click.stop="deleteMessage(message.id)" class="text-red-500 hover:text-red-700 ml-3">-->
-<!--              <i class="fas fa-trash"></i>-->
-<!--            </button>-->
-          </div>
 
+            <!-- Receiver -->
+            <div class="mt-2 text-xs text-gray-600">
+              To: <span class="font-semibold">{{ message.receiver.username }}</span>
+            </div>
+
+            <div class="flex space-x-3 absolute bottom-2 right-3">
+              <button @click.stop="deleteMessage(message.id)" class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1">
+                <font-awesome-icon icon="trash" />
+                Delete
+              </button>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
@@ -123,6 +136,9 @@ export default {
       defaultProfilePic: defaultProfilePic,
     };
   },
+  async mounted() {
+    await this.setActiveTab('received');
+  },
   methods: {
     async setActiveTab(tab) {
       this.activeTab = tab;
@@ -138,9 +154,8 @@ export default {
     createNewMessage() {
       this.$router.push("/new-message");
     },
-    viewMessage(message) {
-      console.log("Opening message:", message);
-      this.$router.push({ name: 'MessageDetail', state: { message } });
+    viewMessage(id) {
+      this.$router.push({ name: 'MessageDetail', params: { messageId: id } });
     },
     replyMessage(message) {
       console.log("Replying to:", message);
@@ -152,6 +167,10 @@ export default {
     },
     formatDate(dateString) {
       const date = new Date(dateString);
+      if (isNaN(date)) {
+        console.error("Invalid date value:", dateString);
+        return "Invalid Date"; // Return a default value if the date is invalid
+      }
       return format(date, 'yyyy-MM-dd HH:mm:ss');
     },
     truncateText(text, max=15) {
@@ -165,5 +184,4 @@ export default {
 </script>
 
 <style scoped>
-/* Additional styling if needed */
 </style>
