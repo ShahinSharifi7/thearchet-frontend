@@ -201,17 +201,31 @@ export default {
       }
     },
     async updateProfile() {
+      // List of required fields
+      const requiredFields = [
+        "preferred_instrument", "level_of_expertise", "favorite_genre",
+        "available_time", "own_song", "academic_knowledge", "preferred_clothing"
+      ];
+
+      // Check for empty fields
+      const missingFields = requiredFields.filter(field => !this[field]);
+
+      if (missingFields.length > 0) {
+        alert("Please fill in all required fields before submitting.");
+        return;
+      }
+
       try {
         this.submitting = true;
         const formData = new FormData();
-        const fields = [
-          "preferred_instrument", "level_of_expertise", "favorite_genre", "available_time", "own_song",
-          "academic_knowledge", "academic_knowledge", "preferred_clothing"];
-        fields.forEach(field => formData.append(field, this[field]));
+
+        requiredFields.forEach(field => formData.append(field, this[field]));
+
         await updateUserProfile(formData);
+
         if (!this.redirectToMatchingQuestions) {
-          this.$router.push({name: 'MatchingQuestions', query: {showQuestions: 'true'}});
-          return
+          this.$router.push({ name: 'MatchingQuestions', query: { showQuestions: 'true' } });
+          return;
         }
         this.$router.push('/matching-questions');
       } catch (error) {
