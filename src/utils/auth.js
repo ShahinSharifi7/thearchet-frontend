@@ -47,16 +47,24 @@ api.interceptors.response.use(
 
             if (!isRefreshing) {
                 isRefreshing = true;
-                try {
-                    const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
-                    const response = await axios.post(`${VUE_APP_API_BASE_URL}api/token/refresh/`, { refresh: refreshToken });
 
-                    // Update tokens
-                    localStorage.setItem("access_token", response.data.access);
-                    localStorage.setItem("refresh_token", response.data.refresh || refreshToken); // Keep old refresh token if not provided
+                try {
+                    const response = await axios.post(
+                        `${process.env.VUE_APP_API_BASE_URL}api/token/refresh/`,
+                        { refresh: refreshToken }
+                    );
+
+                    const newAccessToken = response.data.access;
+                    const newRefreshToken = response.data.refresh || refreshToken;
+
+                    localStorage.setItem("access_token", newAccessToken);
+                    localStorage.setItem("refresh_token", newRefreshToken);
 
                     isRefreshing = false;
-                    onRefreshed(response.data.access);
+                    onRefreshed(newAccessToken);
+
+                    // Retry the failed requests
+                    return api(originalRequest);
                 } catch (refreshError) {
                     console.error("Refresh token expired or invalid. Logging out...");
                     logoutUser();
@@ -64,6 +72,7 @@ api.interceptors.response.use(
                 }
             }
 
+            // Queue requests until token refresh completes
             return new Promise((resolve) => {
                 addRefreshSubscriber((newToken) => {
                     originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
