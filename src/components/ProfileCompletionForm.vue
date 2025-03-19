@@ -217,87 +217,6 @@
           </div>
         </div>
 
-        <div class="section-title">
-          <span class="section-text">Music</span>
-        </div>
-
-        <!-- Preferred Instrument -->
-        <div>
-          <label class="block text-sm font-semibold">Select your preferred instrument:</label>
-          <select v-model="preferred_instrument" class="w-full p-2 border rounded-lg">
-            <option value="" disabled>Select an instrument</option>
-            <option v-for="instrument in instruments" :key="instrument" :value="instrument">{{ instrument }}</option>
-          </select>
-        </div>
-
-        <!-- Expertise Level -->
-        <div>
-          <label class="block text-sm font-semibold" for="level_of_expertise">What is your level of expertise?</label>
-          <select id="level_of_expertise" v-model="level_of_expertise" class="w-full p-2 mt-1 border-2 border-gray-300 rounded-md bg-white focus:border-[#B7372B] focus:outline-none">
-            <option value="" disabled selected>Select your level</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-        </div>
-
-
-        <!-- Favorite Music Genre -->
-        <div>
-          <label class="block text-sm font-semibold" for="favorite_genre">What is your favorite music genre?</label>
-          <select id="favorite_genre" v-model="favorite_genre" class="w-full p-2 mt-1 border-2 border-gray-300 rounded-md bg-white focus:border-[#B7372B] focus:outline-none">
-            <option value="" disabled selected>Select your favorite genre</option>
-            <option v-for="genre in musicGenres" :key="genre" :value="genre">{{ genre }}</option>
-          </select>
-        </div>
-
-
-        <!-- Time Commitment -->
-        <div>
-          <label class="block text-sm font-semibold" for="available_time">How much time can you dedicate to the band?</label>
-          <select id="available_time" v-model="available_time" class="w-full p-2 mt-1 border-2 border-gray-300 rounded-md bg-white focus:border-[#B7372B] focus:outline-none">
-            <option value="" disabled selected>Select your level of commitment</option>
-            <option value="A light commitment for casual collaboration.">A light commitment for casual collaboration.</option>
-            <option value="A moderate commitment to maintain progress.">A moderate commitment to maintain progress.</option>
-            <option value="A serious commitment to improve and prepare for performances.">A serious commitment to improve and prepare for performances.</option>
-            <option value="A highly dedicated, professional-level commitment.">A highly dedicated, professional-level commitment.</option>
-          </select>
-        </div>
-
-
-        <!-- Own Song -->
-        <div>
-          <label class="block text-sm font-semibold" for="own_song">Do you have your own song?</label>
-          <select id="own_song" v-model="own_song" class="w-full p-2 mt-1 border-2 border-gray-300 rounded-md bg-white focus:border-[#B7372B] focus:outline-none">
-            <option value="" disabled selected>Select an option</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-
-        <!-- Formal Academic Knowledge in Music -->
-        <div>
-          <label class="block text-sm font-semibold" for="academic_knowledge">Do you have formal academic knowledge in music?</label>
-          <select id="academic_knowledge" v-model="academic_knowledge" class="w-full p-2 mt-1 border-2 border-gray-300 rounded-md bg-white focus:border-[#B7372B] focus:outline-none">
-            <option value="" disabled selected>Select an option</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-
-        <!-- Preferred Clothing Style -->
-        <div>
-          <label class="block text-sm font-semibold" for="clothing_style">What is your preferred clothing style?</label>
-          <select id="clothing_style" v-model="preferred_clothing" class="w-full p-2 mt-1 border-2 border-gray-300 rounded-md bg-white focus:border-[#B7372B] focus:outline-none">
-            <option value="" disabled selected>Select your style</option>
-            <option value="Classic and Formal">Classic and Formal</option>
-            <option value="Vintage-Inspired">Vintage-Inspired</option>
-            <option value="Sporty and Active">Sporty and Active</option>
-            <option value="Urban and Street Style">Urban and Street Style</option>
-            <option value="Dark and Gothic">Dark and Gothic</option>
-          </select>
-        </div>
-
         <!-- Submit Button -->
         <button type="submit" class="w-full text-white py-2 rounded-lg" style="background-color: #B7372B" :disabled="submitting">
           <span v-if="submitting">Saving...</span>
@@ -449,14 +368,12 @@ export default {
         const fields = [
           "first_name", "last_name", "phone_number", "birth_date", "gender",
           "personality_social", "personality_detail", "decision_making", "planning_style",
-          "province", "city", "level_of_expertise", "favorite_genre", "available_time",
-          "own_song", "academic_knowledge", "preferred_clothing", "preferred_instrument"
-        ];
+          "province", "city",];
         fields.forEach(field => formData.append(field, this[field]));
 
         // Append social media links
         Object.keys(this.social_links).forEach((key) => {
-          formData.append(`${key}`, this.social_links[key]);
+          formData.append(`${key}`, this.social_links[key] ?? "");
         });
 
         // Check if there's a new profile picture and append it to the form data
@@ -465,7 +382,7 @@ export default {
         }
 
         await updateUserProfile(formData);
-        location.reload();
+        // location.reload();
         if (this.redirectToQuestions) {
           this.submitting = false;
           this.$router.push('/instrument-recommendation');
