@@ -71,4 +71,12 @@ onUnmounted(() => {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
 }
+
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
 </style>
