@@ -368,6 +368,7 @@ export default {
         }
 
         await updateUserProfile(formData);
+        alert("Your profile has been successfully updated!");
         // location.reload();
         if (this.redirectToQuestions) {
           this.submitting = false;
