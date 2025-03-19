@@ -4,7 +4,7 @@
       <div
           class="absolute inset-0 w-full h-full bg-[url('@/assets/background.png')] bg-repeat bg-[size:200px] opacity-30 pointer-events-none"></div>
 
-      <div class="relative w-full h-[25vh] min-h-[25dvh] flex flex-col justify-center items-center text-white"
+      <div class="relative w-full h-[35vdh] min-h-[35dvh] flex flex-col justify-center items-center text-white"
            :class="headerClass"
       >
 
@@ -81,7 +81,7 @@
       </div>
       <!-- Google Ads Box (Conditionally visible based on Premium Status) -->
       <div v-if="!isPremiumUser" class="w-full bg-white p-4">
-        <div id="ad-container"></div>
+        <div id="adsense-home" class="adsense-unit"></div>
       </div>
 
     </main>
@@ -118,23 +118,8 @@ export default {
   },
   mounted() {
     this.loadProfileData();
-    this.loadAd();
   },
   methods: {
-    loadAd() {
-      let adContainer = document.getElementById('ad-container');
-
-      let ins = document.createElement('script');
-      ins.className = 'adsbygoogle';
-      ins.style.display = 'block';
-      ins.setAttribute('data-ad-client', 'ca-pub-7088976414557960');
-      ins.setAttribute('data-ad-format', 'auto');
-      ins.setAttribute('data-full-width-responsive', 'true');
-      adContainer.appendChild(ins);
-
-
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    },
     goToProfile() {
       this.$router.push('/profile');
     },
