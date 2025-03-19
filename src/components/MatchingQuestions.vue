@@ -75,7 +75,7 @@
                     v-model="responses[questions[currentIndex].label]"
                     :value="option.text"
                     class="hidden"
-                    @change="goToNextQuestion(option.text)"
+                    @click="goToNextQuestion(option.text)"
                 />
                 {{ option.text }}
               </label>
