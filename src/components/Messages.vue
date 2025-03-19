@@ -78,7 +78,8 @@
 
       <ul v-if="activeTab === 'sent'" class="space-y-2">
         <li v-for="message in sentMessages" :key="message.id"
-            class="flex items-center bg-white shadow rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition">
+            class="flex items-center bg-white shadow rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition"
+            @click="viewMessage(message.id)">
 
           <!-- Profile Picture -->
           <img :src="message.receiver.profile_picture || defaultProfilePic"
