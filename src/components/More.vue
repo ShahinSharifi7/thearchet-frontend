@@ -7,7 +7,7 @@
       <span class="text-[3vh] modak">Archet</span>
     </div>
 
-    <div class="h-full overflow-y-auto w-full flex flex-col items-center">
+    <div class="flex-1 overflow-y-auto w-full flex flex-col items-center pb-20">
       <!-- Profile Picture -->
       <div class="mt-4 flex flex-col items-center">
         <div class="relative flex flex-col justify-center items-center">
