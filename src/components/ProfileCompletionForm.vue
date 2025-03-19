@@ -373,6 +373,11 @@ export default {
           this.submitting = false;
           this.$router.push('/instrument-question-wizard');
         }
+        else {
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        }
       } catch (error) {
         console.error("Failed to update profile:", error);
       } finally {
@@ -386,10 +391,13 @@ export default {
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        this.profile_picture = URL.createObjectURL(file); // Show the uploaded file preview
-        this.profilePicFile = file; // Store the file for the form submission
+        this.profilePicFile = file;
+        this.profile_picture = URL.createObjectURL(file);
+
+        // Force reactivity update by resetting input
+        this.$refs.profileUpload.value = "";
       }
-    },
+    }
   },
 };
 </script>
