@@ -4,6 +4,7 @@ const api = axios.create({
     baseURL: process.env.VUE_APP_API_BASE_URL + "api",
 });
 
+// Attach Authorization Header if Token Exists
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("access_token");
@@ -12,20 +13,23 @@ api.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
-// Flag to prevent multiple refresh requests
+// Refresh Token Logic
 let isRefreshing = false;
 let refreshSubscribers = [];
+
+function addRefreshSubscriber(callback) {
+    refreshSubscribers.push(callback);
+}
 
 function onRefreshed(newToken) {
     refreshSubscribers.forEach((callback) => callback(newToken));
     refreshSubscribers = [];
 }
 
+// Handle Response Errors
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -34,35 +38,34 @@ api.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
+            const refreshToken = localStorage.getItem("refresh_token");
+            if (!refreshToken) {
+                console.warn("No refresh token found. Logging out.");
+                logoutUser();
+                return Promise.reject(error);
+            }
+
             if (!isRefreshing) {
                 isRefreshing = true;
                 try {
-                    const refreshToken = localStorage.getItem("refresh_token");
                     const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
                     const response = await axios.post(`${VUE_APP_API_BASE_URL}api/token/refresh/`, { refresh: refreshToken });
 
                     // Update tokens
                     localStorage.setItem("access_token", response.data.access);
-                    localStorage.setItem("refresh_token", response.data.refresh);  // Update the refresh token if needed
-                    originalRequest.headers["Authorization"] = `Bearer ${response.data.access}`;
+                    localStorage.setItem("refresh_token", response.data.refresh || refreshToken); // Keep old refresh token if not provided
 
-                    // Retry failed requests after token is refreshed
-                    onRefreshed(response.data.access);
-
-                    // Reload the page to retry the original request
-                    window.location.reload();
-                } catch (refreshError) {
-                    console.error("Refresh token expired, logging out...");
-                    localStorage.removeItem("access_token");
-                    localStorage.removeItem("refresh_token");
-                    window.location.href = "/login";
-                } finally {
                     isRefreshing = false;
+                    onRefreshed(response.data.access);
+                } catch (refreshError) {
+                    console.error("Refresh token expired or invalid. Logging out...");
+                    logoutUser();
+                    return Promise.reject(refreshError);
                 }
             }
 
             return new Promise((resolve) => {
-                refreshSubscribers.push((newToken) => {
+                addRefreshSubscriber((newToken) => {
                     originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
                     resolve(api(originalRequest));
                 });
@@ -72,5 +75,11 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+function logoutUser() {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    window.location.href = "/login";
+}
 
 export default api;

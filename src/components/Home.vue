@@ -149,7 +149,7 @@ export default {
       await this.fetchProfileStatus();  // Check profile status before navigating
 
       if (this.isProfileComplete) {
-        this.$router.push('/instrument-recommendation');  // Redirect to question-wizard if profile is complete
+        this.$router.push('/instrument-question-wizard');  // Redirect to question-wizard if profile is complete
       } else {
         // Redirect to the profile page and show a popup for completing the profile
         this.$router.push({name: 'Profile', query: {redirectToQuestions: 'true'}});
@@ -160,7 +160,7 @@ export default {
       }
     },
     handleMusicPartner() {
-      this.$router.push('/matching-questions');
+      this.$router.push({name: 'MatchingProfile', query: {redirectToMatchingQuestions: 'true'}});
     },
     handleEvents() {
       this.$router.push('/events');

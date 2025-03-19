@@ -1,9 +1,13 @@
 <template>
   <div class="h-full flex flex-col w-full">
-
+    <div class="flex justify-center items-center h-[10vh] w-full items-center"
+         style="background-color: #C00000; color: white">
+      <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
+      <span class="text-[3vh] modak mx-1">Archet</span>
+    </div>
     <!-- Welcome Screen (Only shows if hasSuggestion is false) -->
     <template v-if="showWelcomeScreen && !hasSuggestion">
-      <div class="flex flex-col items-center h-full text-center px-6 mt-6">
+      <div class="flex flex-col items-center h-full text-center px-6">
         <h2 class="text-title font-bold text-xl">🎵 Your musical journey starts here!</h2>
         <p class="text-gray-700 mt-6 text-sm text-left">🎯 Learn efficiently with an instrument that suits you!</p>
         <p class="text-gray-700 mt-1 text-sm text-left">🚀 Progress faster with the right instrument!</p>
@@ -19,7 +23,7 @@
 
     <!-- Suggested Instrument Display -->
     <template v-else-if="hasSuggestion">
-      <div class="flex flex-col items-center justify-center h-full overflow-y-auto">
+      <div class="flex flex-col items-center h-full overflow-y-auto">
         <h2 class="text-title font-bold">Your Suggested Instrument</h2>
         <img :src="suggestedInstrumentImageUrl" :alt="suggestedInstrument"
              class="w-32 h-32 mt-4 object-cover"/>
@@ -65,7 +69,7 @@
         </div>
 
         <!-- Questions Section -->
-        <div class="flex flex-col items-center justify-center px-4 my-2 flex-grow">
+        <div class="flex flex-col items-center px-4 flex-grow">
           <div v-if="questions.length" class="w-full text-center">
             <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
             <div class="w-full flex flex-col gap-3">

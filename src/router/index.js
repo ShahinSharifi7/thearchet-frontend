@@ -20,6 +20,7 @@ import Events from "@/components/EventsPage";
 import StorePage from "@/components/StorePage";
 import Learning from "@/components/Learning";
 import PremiumPage from "@/components/PremiumPage";
+import MatchingProfile from "@/components/MatchingProfile";
 
 // Vue.use(VueRouter);
 
@@ -132,6 +133,12 @@ const routes = [
                 path: '/premium',
                 name: 'Premium',
                 component: PremiumPage,
+                meta: { requiresAuth: true },
+            },
+            {
+                path: '/matching-profile',
+                name: 'MatchingProfile',
+                component: MatchingProfile,
                 meta: { requiresAuth: true },
             },
         ],

@@ -19,36 +19,25 @@
       <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
       <span class="text-[3vh] modak">Archet</span>
     </div>
-    <div v-if="hasMatches && !loading" class="flex items-center justify-between w-full px-4 py-2 border-b bg-[#E9C3BF]">
+    <!-- Header of having matches   -->
+    <div v-if="hasMatches && !loading && !showQuestions" class="flex items-center justify-between w-full px-4 py-2 border-b bg-[#E9C3BF]">
+      <!-- Back Button (Left) -->
       <button @click="redoQuestions" class="text-red-600 font-bold text-md">
-        ← Back
+        <font-awesome-icon :icon="['fas', 'arrow-left']" class="text-xl" />
       </button>
-      <h2 class="text-xl font-bold text-gray-900">Your Matches</h2>
-      <div class="w-8"></div> <!-- Placeholder to balance flex spacing -->
+
+      <!-- Title (Centered) -->
+      <h2 class="text-xl font-bold text-gray-900 flex-grow text-center">Your Matches</h2>
+
+      <!-- Edit Button (Right) -->
+      <button @click="$router.push('/matching-profile')" class="text-red-600 font-bold text-md">
+        <font-awesome-icon :icon="['fas', 'user-edit']" class="text-xl" />
+      </button>
     </div>
+
     <!-- Questions Section   -->
-    <div v-else-if="!hasMatches  && !loading" class="flex flex-col h-full">
-      <template v-if="showWelcomeScreen">
-        <div class="flex flex-col items-center h-full text-left px-6 max-w-[600px] mx-auto mt-4">
-          <h2 class="text-title font-bold text-center w-full">Find your perfect music partner!</h2>
-          <div class="flex flex-col items-start w-full mt-6">
-            <p class="text-gray-700 text-sm">🎶 Team up with someone who matches your rhythm and goals!</p>
-            <p class="text-gray-700 text-sm mt-4">⚡ Boost your learning and creativity with the right partner!</p>
-            <p class="text-gray-700 text-sm mt-4">✅ No more solo struggles—collaborate with the ideal match!</p>
-            <p class="text-gray-700 text-sm mt-4">🎯 Practice smarter, not harder—connect with your musical match
-              today!</p>
-            <p class="text-gray-700 text-sm mt-4">🌟 Achieve harmony—pair up with someone who shares your passion and
-              pace!</p>
-          </div>
-          <button
-              @click="startQuiz"
-              class="px-6 py-3 mt-6 bg-red-600 text-white rounded-lg text-lg font-semibold transition-all hover:bg-red-700"
-          >
-            Let's Get Started!
-          </button>
-        </div>
-      </template>
-      <div v-else>
+    <div v-else-if="(!hasMatches || showQuestions) && !loading" class="flex flex-col h-full">
+      <div>
         <div class="flex flex-col items-center justify-center my-4">
           <h2 class="text-title font-bold">Answer the Questions</h2>
           <div class="w-3/4 mt-2 justify-center items-center text-center">
@@ -63,19 +52,23 @@
         </div>
 
         <!-- Questions Section (70%) -->
-        <div class="flex flex-col items-center justify-center px-4 my-2">
+        <div class="flex flex-col items-center justify-center px-4 my-2 overflow-y-auto">
           <div v-if="questions.length" class="w-full text-center">
             <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
-            <div class="w-full flex flex-col gap-3" v-if="questions[currentIndex].type === 'Choice'">
+
+            <!-- Scrollable options container -->
+            <div
+                v-if="questions[currentIndex].type === 'Choice'"
+                class="w-full flex flex-col gap-3 max-h-95 overflow-y-auto px-2"
+            >
               <label
                   v-for="option in questions[currentIndex].options"
                   :key="option.text"
                   class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
                   :class="{
-                      'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.text,
-                      'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.text
-                    }"
-
+              'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.text,
+              'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.text
+            }"
               >
                 <input
                     type="radio"
@@ -87,6 +80,8 @@
                 {{ option.text }}
               </label>
             </div>
+
+            <!-- Text input for numerical value -->
             <div class="w-full flex flex-col gap-3" v-else-if="questions[currentIndex].type === 'Text'">
               <input
                   type="number"
@@ -97,6 +92,7 @@
             </div>
           </div>
         </div>
+
 
         <!-- Buttons Section (Fixed at the Bottom but Above BottomNavbar) -->
         <div
@@ -203,7 +199,6 @@ export default {
   data() {
     return {
       loading: true,
-      showWelcomeScreen: true,
       submitting: false,
       logo: logo,
       defaultProfilePic: defaultProfilePic,
@@ -211,16 +206,18 @@ export default {
       responses: {},
       currentIndex: 0,
       hasMatches: false,
+      showQuestions: false,
       matches: [],
       isPremium: localStorage.getItem("is_premium") === "true" || false,
     }
   },
   async mounted() {
+    this.showQuestions = this.$route.query.showQuestions === 'true';
     if (!this.isPremium) {
       setTimeout(async () => {
         const response = await hasMatches();
         this.hasMatches = response.has_matches;
-        if (this.hasMatches) {
+        if (this.hasMatches && !this.showQuestions) {
           this.matches = await getUserMatches();
         } else {
           this.questions = await fetchMatchingQuestions();
@@ -231,9 +228,10 @@ export default {
       // Premium users should only see loading if the request is running
       const response = await hasMatches();
       this.hasMatches = response.has_matches;
-      if (this.hasMatches) {
+      if (this.hasMatches && !this.showQuestions) {
         this.matches = await getUserMatches();
       } else {
+        console.log("comes here");
         this.questions = await fetchMatchingQuestions();
       }
       this.loading = false;
@@ -260,10 +258,19 @@ export default {
     async submitAnswers() {
       try {
         const response = await submitMatchingQuestionsAnswers(this.responses);
+        this.showQuestions = false;
         if (response === "Empty") {
+          this.showQuestions = false;
           this.hasMatches = true;
         } else {
-          location.reload();
+          this.$router.replace({
+            query: {
+              ...this.$route.query, // Preserve other query parameters
+              showQuestions: false  // Set showQuestions to false
+            }
+          }).then(() => {
+            location.reload(); // Reload the page after updating the query
+          });
         }
       } catch (error) {
         console.error("Error submitting answers:", error);

@@ -1,10 +1,5 @@
 <template>
   <div class="h-full bg-[url('@/assets/background-low-op.png')] bg-repeat bg-[size:200px]">
-    <div class="flex justify-center items-center h-[10vh] w-full items-center"
-         style="background-color: #C00000; color: white">
-      <img :src="logo" alt="Logo" class="h-[80%] w-auto mx-1"/>
-      <span class="text-[3vh] modak mx-1">Archet</span>
-    </div>
     <div class="w-full">
       <div v-if="isProfileComplete === null">Loading...</div>
 

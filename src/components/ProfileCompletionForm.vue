@@ -15,7 +15,8 @@
     <div class="absolute inset-0 w-full h-full  opacity-30 pointer-events-none"></div>
 
     <!-- Profile Form Container -->
-    <div class="p-6 bg-white rounded-lg shadow-lg w-full overflow-y-auto bg-[url('@/assets/background-low-op.png')] bg-repeat bg-[size:200px]">
+    <div
+        class="p-6 bg-white rounded-lg shadow-lg w-full overflow-y-auto bg-[url('@/assets/background-low-op.png')] bg-repeat bg-[size:200px]">
 
       <form @submit.prevent="updateProfile" class="space-y-4">
         <!-- Profile Picture -->
@@ -121,31 +122,36 @@
         <!-- Instagram -->
         <div>
           <label class="block text-sm font-semibold">Instagram</label>
-          <input v-model="social_links.instagram" type="url" placeholder="https://instagram.com/yourprofile" class="w-full p-2 border rounded-lg"/>
+          <input v-model="social_links.instagram" type="url" placeholder="https://instagram.com/yourprofile"
+                 class="w-full p-2 border rounded-lg"/>
         </div>
 
         <!-- YouTube -->
         <div>
           <label class="block text-sm font-semibold">YouTube</label>
-          <input v-model="social_links.youtube" type="url" placeholder="https://youtube.com/yourchannel" class="w-full p-2 border rounded-lg"/>
+          <input v-model="social_links.youtube" type="url" placeholder="https://youtube.com/yourchannel"
+                 class="w-full p-2 border rounded-lg"/>
         </div>
 
         <!-- SoundCloud -->
         <div>
           <label class="block text-sm font-semibold">SoundCloud</label>
-          <input v-model="social_links.soundcloud" type="url" placeholder="https://soundcloud.com/yourchannel" class="w-full p-2 border rounded-lg"/>
+          <input v-model="social_links.soundcloud" type="url" placeholder="https://soundcloud.com/yourchannel"
+                 class="w-full p-2 border rounded-lg"/>
         </div>
 
         <!-- Spotify -->
         <div>
           <label class="block text-sm font-semibold">Spotify</label>
-          <input v-model="social_links.spotify" type="url" placeholder="https://spotify.com/yourchannel" class="w-full p-2 border rounded-lg"/>
+          <input v-model="social_links.spotify" type="url" placeholder="https://spotify.com/yourchannel"
+                 class="w-full p-2 border rounded-lg"/>
         </div>
 
         <!-- Apple Music -->
         <div>
           <label class="block text-sm font-semibold">Apple Music</label>
-          <input v-model="social_links.apple_music" type="url" placeholder="https://music.apple.com/yourprofile" class="w-full p-2 border rounded-lg"/>
+          <input v-model="social_links.apple_music" type="url" placeholder="https://music.apple.com/yourprofile"
+                 class="w-full p-2 border rounded-lg"/>
         </div>
 
         <div class="section-title">
@@ -218,7 +224,8 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="w-full text-white py-2 rounded-lg" style="background-color: #B7372B" :disabled="submitting">
+        <button type="submit" class="w-full text-white py-2 rounded-lg" style="background-color: #B7372B"
+                :disabled="submitting">
           <span v-if="submitting">Saving...</span>
           <span v-else>Save</span>
         </button>
@@ -272,21 +279,6 @@ export default {
         "Yukon": ["Whitehorse"],
         "Nunavut": ["Iqaluit"],
       },
-      level_of_expertise: "",
-      favorite_genre: "",
-      available_time: "",
-      own_song: "",
-      academic_knowledge: "",
-      preferred_instrument: "",
-      preferred_clothing: "",
-      instruments: [
-        "Electric Guitar", "Saxophone", "Drums and Percussion", "Violin",
-        "Acoustic Guitar", "Piano", "Cello", "Flute"
-      ],
-      musicGenres: [
-        "Classical", "Jazz", "Blues", "Dance", "Rock", "Traditional",
-        "Country", "Latin", "Pop", "EDM", "Experimental", "Funk"
-      ],
       // Social Media Links
       social_links: {
         instagram: "",
@@ -326,13 +318,6 @@ export default {
         this.profile_picture = profileData.profile_picture;
         this.province = profileData.province;
         this.city = profileData.city;
-        this.level_of_expertise = profileData.level_of_expertise;
-        this.favorite_genre = profileData.favorite_genre;
-        this.available_time = profileData.available_time;
-        this.own_song = profileData.own_song;
-        this.academic_knowledge = profileData.academic_knowledge;
-        this.preferred_clothing = profileData.preferred_clothing;
-        this.preferred_instrument = profileData.preferred_instrument;
         this.social_links.instagram = profileData.instagram || "";
         this.social_links.youtube = profileData.youtube || "";
         this.social_links.tiktok = profileData.spotify || "";
@@ -350,6 +335,7 @@ export default {
       const requiredFields = [
         this.birth_date,
         this.gender,
+        this.phone_number,
         this.personality_social,
         this.personality_detail,
         this.decision_making,
@@ -385,12 +371,11 @@ export default {
         // location.reload();
         if (this.redirectToQuestions) {
           this.submitting = false;
-          this.$router.push('/instrument-recommendation');
+          this.$router.push('/instrument-question-wizard');
         }
       } catch (error) {
         console.error("Failed to update profile:", error);
-      }
-      finally {
+      } finally {
         this.submitting = false;
       }
     },
@@ -418,10 +403,16 @@ export default {
   height: 40px;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .section-title {
   display: flex;
   align-items: center;
