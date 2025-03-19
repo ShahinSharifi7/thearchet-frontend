@@ -131,6 +131,7 @@ export default {
         const profileData = await fetchUserProfile();
         this.profile_picture = profileData.profile_picture;
         this.isPremiumUser = profileData.is_premium;
+        localStorage.setItem("is_premium", profileData.is_premium ? "true" : "false");
       } catch (error) {
         console.error("Failed to load profile data:", error);
       }
