@@ -17,7 +17,12 @@
       <div class="flex-1 overflow-y-auto scroll-container">
         <router-view class="bg-white"/>
       </div>
-      <BottomNavbar v-if="!hideNavbar" class="fixed bottom-0 w-full z-30"/>
+      <BottomNavbar
+          v-if="!hideNavbar"
+          class="fixed bottom-0 w-full z-30 transition-all duration-300"
+          :class="{ 'translate-y-20 opacity-0 pointer-events-none': isKeyboardOpen }"
+      />
+
     </div>
   </div>
 </template>
@@ -28,17 +33,30 @@ import BottomNavbar from '@/layouts/BottomNavbar.vue';
 import { useRoute } from 'vue-router';
 
 const isLargeScreen = ref(window.innerWidth >= 1024);
+const isKeyboardOpen = ref(false);
+const route = useRoute();
+
+// Update screen size
 const updateScreenSize = () => {
   isLargeScreen.value = window.innerWidth >= 1024;
 };
-const route = useRoute();
 
-// Hide navbar on specific routes
+// Hide navbar on login/signup pages
 const hideNavbar = computed(() => route.path === '/login' || route.path === '/signup');
+
+// Detect if keyboard is open
+const detectKeyboard = () => {
+  const initialHeight = window.innerHeight;
+  window.addEventListener('resize', () => {
+    const newHeight = window.innerHeight;
+    isKeyboardOpen.value = newHeight < initialHeight * 0.8; // Keyboard opens when height shrinks significantly
+  });
+};
 
 onMounted(() => {
   window.addEventListener('resize', updateScreenSize);
-  document.body.style.overflow = 'hidden'; // Prevent scrolling
+  detectKeyboard();
+  document.body.style.overflow = 'hidden'; // Prevent page scrolling
 });
 
 onUnmounted(() => {
@@ -46,6 +64,7 @@ onUnmounted(() => {
   document.body.style.overflow = ''; // Restore scrolling
 });
 </script>
+
 <style>
 /* Ensures the internal scroll container can scroll */
 .scroll-container {
