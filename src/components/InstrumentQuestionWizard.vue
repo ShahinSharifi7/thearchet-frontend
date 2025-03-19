@@ -7,11 +7,26 @@
     </div>
     <!-- Welcome Screen (Only shows if hasSuggestion is false) -->
     <template v-if="showWelcomeScreen && !hasSuggestion">
-      <div class="flex flex-col items-center h-full text-center px-6">
-        <h2 class="text-title font-bold text-xl">🎵 Your musical journey starts here!</h2>
-        <p class="text-gray-700 mt-6 text-sm text-left">🎯 Learn efficiently with an instrument that suits you!</p>
-        <p class="text-gray-700 mt-1 text-sm text-left">🚀 Progress faster with the right instrument!</p>
-        <p class="text-gray-700 mt-1 text-sm text-left">✅ No more trial and error! Start with confidence!</p>
+      <div class="flex flex-col items-center h-full text-left px-6 max-w-[600px] mx-auto mt-4">
+        <h2 class="text-title font-bold text-center w-full">Your musical journey starts here!</h2>
+        <div class="flex flex-col items-start w-full mt-6">
+          <p class="text-gray-700 text-sm flex items-center">
+            <font-awesome-icon :icon="['fas', 'circle']" class="text-red-600 text-md mr-2" />
+            Learn efficiently with an instrument that suits you!
+          </p>
+          <p class="text-gray-700 text-sm flex items-center mt-4">
+            <font-awesome-icon :icon="['fas', 'circle']" class="text-red-600 text-md mr-2" />
+            Progress faster with the right instrument!
+          </p>
+          <p class="text-gray-700 text-sm flex items-center mt-4">
+            <font-awesome-icon :icon="['fas', 'circle']" class="text-red-600 text-md mr-2" />
+            No more solo struggles—collaborate with the ideal match!
+          </p>
+          <p class="text-gray-700 text-sm flex items-center mt-4">
+            <font-awesome-icon :icon="['fas', 'circle']" class="text-red-600 text-md mr-2" />
+            No more trial and error! Start with confidence!
+          </p>
+        </div>
         <button
             @click="startQuiz"
             class="px-6 py-3 mt-6 bg-red-600 text-white rounded-lg text-lg font-semibold transition-all hover:bg-red-700"
@@ -69,7 +84,7 @@
         </div>
 
         <!-- Questions Section -->
-        <div class="flex flex-col items-center px-4 flex-grow">
+        <div class="flex flex-col items-center px-4 flex-grow pb-20">
           <div v-if="questions.length" class="w-full text-center">
             <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
             <div class="w-full flex flex-col gap-3">

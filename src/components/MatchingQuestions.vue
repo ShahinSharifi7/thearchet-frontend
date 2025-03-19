@@ -52,7 +52,7 @@
         </div>
 
         <!-- Questions Section (70%) -->
-        <div class="flex flex-col items-center justify-center px-4 my-2 overflow-y-auto">
+        <div class="flex flex-col items-center justify-center px-4 my-2 overflow-y-auto pb-20">
           <div v-if="questions.length" class="w-full text-center">
             <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
 
@@ -96,7 +96,7 @@
 
         <!-- Buttons Section (Fixed at the Bottom but Above BottomNavbar) -->
         <div
-            class="buttons-container absolute bottom-[70px] left-0 w-full px-6 py-4 flex justify-between bg-white z-10">
+            class="buttons-container absolute bottom-[70px] left-0 w-full px-6 py-4 flex justify-between z-10">
           <button
               @click="prevQuestion"
               :disabled="currentIndex === 0"
@@ -257,6 +257,7 @@ export default {
     },
     async submitAnswers() {
       try {
+        this.loading = true;
         const response = await submitMatchingQuestionsAnswers(this.responses);
         this.showQuestions = false;
         if (response === "Empty") {
