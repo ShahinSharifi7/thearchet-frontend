@@ -64,7 +64,7 @@
         <button
             class="items-center justify-center flex flex-col relative z-10"
             @click="handleEvents">
-          <img :src="musicPartnerPic" alt="Music Partner"
+          <img :src="eventsPic" alt="Events"
                class="h-auto w-32 max-w-[70px] sm:max-w-[90px] md:max-w-[90px] object-contain">
 
 

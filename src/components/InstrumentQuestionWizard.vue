@@ -84,18 +84,21 @@
         </div>
 
         <!-- Questions Section -->
-        <div class="flex flex-col items-center px-4 flex-grow pb-20">
+        <div class="flex flex-col items-center px-4 flex-grow">
           <div v-if="questions.length" class="w-full text-center">
             <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
-            <div class="w-full flex flex-col gap-3">
+            <div
+                class="w-full grid gap-3"
+                :class="{'grid-cols-2': questions[currentIndex].options.length > 4, 'grid-cols-1': questions[currentIndex].options.length <= 4}"
+            >
               <label
                   v-for="option in questions[currentIndex].options"
                   :key="option.value"
                   class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
                   :class="{
-                    'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.value,
-                    'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.value
-                  }"
+          'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.value,
+          'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.value
+        }"
               >
                 <input
                     type="radio"
@@ -109,6 +112,7 @@
             </div>
           </div>
         </div>
+
 
         <!-- Buttons Section -->
         <div class="buttons-container absolute bottom-[70px] left-0 w-full px-6 py-4 flex justify-between z-10">
