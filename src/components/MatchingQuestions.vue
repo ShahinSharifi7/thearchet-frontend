@@ -273,6 +273,7 @@ export default {
             location.reload(); // Reload the page after updating the query
           });
         }
+        this.loading = false;
       } catch (error) {
         console.error("Error submitting answers:", error);
       }
