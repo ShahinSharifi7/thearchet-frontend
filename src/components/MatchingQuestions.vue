@@ -52,23 +52,24 @@
         </div>
 
         <!-- Questions Section (70%) -->
-        <div class="flex flex-col items-center justify-center px-4 my-2 overflow-y-auto pb-20">
+        <div class="flex flex-col items-center justify-center px-4 my-2 overflow-y-auto">
           <div v-if="questions.length" class="w-full text-center">
             <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
 
             <!-- Scrollable options container -->
             <div
                 v-if="questions[currentIndex].type === 'Choice'"
-                class="w-full flex flex-col gap-3 max-h-95 overflow-y-auto px-2"
+                class="w-full grid gap-3 max-h-95 overflow-y-auto px-2"
+                :class="{'grid-cols-2': questions[currentIndex].options.length > 4, 'grid-cols-1': questions[currentIndex].options.length <= 4}"
             >
               <label
                   v-for="option in questions[currentIndex].options"
                   :key="option.text"
                   class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
                   :class="{
-              'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.text,
-              'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.text
-            }"
+          'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.text,
+          'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.text
+        }"
               >
                 <input
                     type="radio"
@@ -92,6 +93,7 @@
             </div>
           </div>
         </div>
+
 
 
         <!-- Buttons Section (Fixed at the Bottom but Above BottomNavbar) -->
@@ -240,7 +242,7 @@ export default {
   computed: {
     // Check if all questions have been answered
     allQuestionsAnswered() {
-      return this.questions.every(question => this.responses[question.label] !== undefined);
+      return this.questions.slice(0, -1).every(question => this.responses[question.label] !== undefined);
     }
   },
   methods: {
