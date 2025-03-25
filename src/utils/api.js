@@ -93,3 +93,23 @@ export const fetchMessageDetail = async (messageId) => {
     const response = await api.get(`/message/${messageId}/`);
     return response.data;
 };
+
+export const checkSpotifyConnection = async () => {
+    const response = await api.get("/spotify/status/");
+    return response.data;
+}
+
+export const getSpotifyProfile = async () => {
+    const response = await api.get("/spotify/me/");
+    return response.data;
+}
+
+export const spotifyLogin = async () => {
+    const response = await api.get("/spotify/login/");
+    return response.data;
+}
+
+export const fetchSpotifyTopGenres = async () => {
+    const response = await api.get("/spotify/top-genres");
+    return response.data.top_genres;
+};

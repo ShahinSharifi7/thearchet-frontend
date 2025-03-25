@@ -85,32 +85,34 @@
 
         <!-- Questions Section -->
         <div class="flex flex-col items-center px-4 flex-grow">
-          <div v-if="questions.length" class="w-full text-center">
-            <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
-            <div
-                class="w-full grid gap-3"
-                :class="{'grid-cols-2': questions[currentIndex].options.length > 4, 'grid-cols-1': questions[currentIndex].options.length <= 4}"
-            >
-              <label
-                  v-for="option in questions[currentIndex].options"
-                  :key="option.value"
-                  class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
-                  :class="{
-          'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.value,
-          'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.value
-        }"
+          <transition name="fade-question" mode="out-in">
+            <div :key="currentIndex" v-if="questions.length" class="w-full text-center">
+              <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
+              <div
+                  class="w-full grid gap-3"
+                  :class="{'grid-cols-2': questions[currentIndex].options.length > 4, 'grid-cols-1': questions[currentIndex].options.length <= 4}"
               >
-                <input
-                    type="radio"
-                    v-model="responses[questions[currentIndex].label]"
-                    :value="option.value"
-                    class="hidden"
-                    @click="goToNextQuestion(option.value)"
-                />
-                {{ option.text }}
-              </label>
+                <label
+                    v-for="option in questions[currentIndex].options"
+                    :key="option.value"
+                    class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
+                    :class="{
+            'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.value,
+            'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.value
+          }"
+                >
+                  <input
+                      type="radio"
+                      v-model="responses[questions[currentIndex].label]"
+                      :value="option.value"
+                      class="hidden"
+                      @click="goToNextQuestion(option.value)"
+                  />
+                  {{ option.text }}
+                </label>
+              </div>
             </div>
-          </div>
+          </transition>
         </div>
 
 
@@ -139,7 +141,12 @@
 </template>
 
 <script>
-import { fetchInstrumentQuestions, submitInstrumentSuggestionAnswers, fetchLastInstrumentSuggestion } from "@/utils/api";
+import {
+  fetchInstrumentQuestions,
+  submitInstrumentSuggestionAnswers,
+  fetchLastInstrumentSuggestion,
+  fetchSpotifyTopGenres, checkSpotifyConnection,
+} from "@/utils/api";
 import logo from "@/assets/New Logo.png";
 
 export default {
@@ -153,6 +160,7 @@ export default {
       logo: logo,
       hasSuggestion: false,
       suggestedInstrumentImageUrl: "",
+      spotifyConnected: false,
     };
   },
   async mounted() {
@@ -162,6 +170,7 @@ export default {
       this.suggestedInstrument = lastSuggestion.suggested_instrument.name;
       this.suggestedInstrumentImageUrl = require(`@/assets/${this.suggestedInstrument}.png`);
     } else {
+      await this.checkSpotifyConnection();
       this.questions = await fetchInstrumentQuestions();
     }
   },
@@ -193,20 +202,42 @@ export default {
     },
     goToNextQuestion(optionValue) {
       this.responses[this.questions[this.currentIndex].label] = optionValue;
-      this.nextQuestion();
+      setTimeout(() => {
+        this.nextQuestion();
+      }, 100);
     },
     async retakeExam() {
       this.hasSuggestion = false;
       this.responses = {};
       this.currentIndex = 0;
       this.questions = await fetchInstrumentQuestions();
+      await this.checkSpotifyConnection();
     },
     toStore() {
       this.$router.push({ name: 'StorePage'});
     },
     toLearning() {
       this.$router.push({ name: 'Learning'});
-    }
+    },
+    async fetchSpotifyTopGenres() {
+      const genres = await fetchSpotifyTopGenres();
+      if (this.questions)
+        this.responses[this.questions[12].label] = genres[0];
+      console.log("Spotify profile:", genres);
+    },
+    async checkSpotifyConnection() {
+      try {
+        const res = await checkSpotifyConnection();
+        this.spotifyConnected = res.connected;
+        if (this.spotifyConnected) {
+          await this.fetchSpotifyTopGenres();
+        } else {
+          console.log("User has not connected Spotify.");
+        }
+      } catch (error) {
+        console.error("Error checking Spotify connection:", error);
+      }
+    },
   },
 };
 </script>
@@ -254,4 +285,20 @@ export default {
 .welcome-screen button:hover {
   background-color: #a32f25;
 }
+.fade-question-enter-active,
+.fade-question-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-question-enter-from {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.fade-question-leave-to {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+
 </style>

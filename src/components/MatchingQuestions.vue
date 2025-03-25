@@ -20,10 +20,11 @@
       <span class="text-[3vh] modak">Archet</span>
     </div>
     <!-- Header of having matches   -->
-    <div v-if="hasMatches && !loading && !showQuestions" class="flex items-center justify-between w-full px-4 py-2 border-b bg-[#E9C3BF]">
+    <div v-if="hasMatches && !loading && !showQuestions"
+         class="flex items-center justify-between w-full px-4 py-2 border-b bg-[#E9C3BF]">
       <!-- Back Button (Left) -->
       <button @click="redoQuestions" class="text-red-600 font-bold text-md">
-        <font-awesome-icon :icon="['fas', 'arrow-left']" class="text-xl" />
+        <font-awesome-icon :icon="['fas', 'arrow-left']" class="text-xl"/>
       </button>
 
       <!-- Title (Centered) -->
@@ -31,7 +32,7 @@
 
       <!-- Edit Button (Right) -->
       <button @click="$router.push('/matching-profile')" class="text-red-600 font-bold text-md">
-        <font-awesome-icon :icon="['fas', 'user-edit']" class="text-xl" />
+        <font-awesome-icon :icon="['fas', 'user-edit']" class="text-xl"/>
       </button>
     </div>
 
@@ -53,47 +54,48 @@
 
         <!-- Questions Section (70%) -->
         <div class="flex flex-col items-center justify-center px-4 my-2 overflow-y-auto">
-          <div v-if="questions.length" class="w-full text-center">
-            <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
+          <transition name="fade-question" mode="out-in">
+            <div :key="currentIndex" v-if="questions.length" class="w-full text-center">
+              <p class="text-question font-semibold mb-4">{{ questions[currentIndex].text }}</p>
 
-            <!-- Scrollable options container -->
-            <div
-                v-if="questions[currentIndex].type === 'Choice'"
-                class="w-full grid gap-3 max-h-95 overflow-y-auto px-2"
-                :class="{'grid-cols-2': questions[currentIndex].options.length > 4, 'grid-cols-1': questions[currentIndex].options.length <= 4}"
-            >
-              <label
-                  v-for="option in questions[currentIndex].options"
-                  :key="option.text"
-                  class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
-                  :class="{
+              <!-- Scrollable options container -->
+              <div
+                  v-if="questions[currentIndex].type === 'Choice'"
+                  class="w-full grid gap-3 max-h-95 overflow-y-auto px-2"
+                  :class="{'grid-cols-2': questions[currentIndex].options.length > 4, 'grid-cols-1': questions[currentIndex].options.length <= 4}"
+              >
+                <label
+                    v-for="option in questions[currentIndex].options"
+                    :key="option.text"
+                    class="option-label block w-full p-3 border rounded-lg text-center cursor-pointer transition-all"
+                    :class="{
           'bg-[rgba(192,0,0,0.8)] text-white border-[#B7372B]': responses[questions[currentIndex].label] === option.text,
           'bg-gray-100 hover:bg-gray-200': responses[questions[currentIndex].label] !== option.text
         }"
-              >
+                >
+                  <input
+                      type="radio"
+                      v-model="responses[questions[currentIndex].label]"
+                      :value="option.text"
+                      class="hidden"
+                      @click="goToNextQuestion(option.text)"
+                  />
+                  {{ option.text }}
+                </label>
+              </div>
+
+              <!-- Text input for numerical value -->
+              <div class="w-full flex flex-col gap-3" v-else-if="questions[currentIndex].type === 'Text'">
                 <input
-                    type="radio"
+                    type="number"
                     v-model="responses[questions[currentIndex].label]"
-                    :value="option.text"
-                    class="hidden"
-                    @click="goToNextQuestion(option.text)"
+                    class="border p-3 rounded-lg w-full text-center"
+                    placeholder="Enter value in KM"
                 />
-                {{ option.text }}
-              </label>
+              </div>
             </div>
-
-            <!-- Text input for numerical value -->
-            <div class="w-full flex flex-col gap-3" v-else-if="questions[currentIndex].type === 'Text'">
-              <input
-                  type="number"
-                  v-model="responses[questions[currentIndex].label]"
-                  class="border p-3 rounded-lg w-full text-center"
-                  placeholder="Enter value in KM"
-              />
-            </div>
-          </div>
+          </transition>
         </div>
-
 
 
         <!-- Buttons Section (Fixed at the Bottom but Above BottomNavbar) -->
@@ -282,12 +284,15 @@ export default {
     },
     goToNextQuestion(optionValue) {
       this.responses[this.questions[this.currentIndex].label] = optionValue;
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.clicked = false;
-        }, 100); // Unlock after a short delay
+      // this.$nextTick(() => {
+      //   setTimeout(() => {
+      //     this.clicked = false;
+      //   }, 100); // Unlock after a short delay
+      //   this.nextQuestion();
+      // });
+      setTimeout(() => {
         this.nextQuestion();
-      });
+      }, 100);
     },
     async redoQuestions() {
       this.hasMatches = false;
@@ -308,20 +313,6 @@ export default {
 .blur-md {
   filter: blur(5px);
   pointer-events: none;
-}
-
-/* Adding transitions to the question section */
-.question-container {
-  position: relative;
-  transition: transform 0.3s ease-in-out;
-}
-
-.question-container-enter-active, .question-container-leave-active {
-  transition: transform 0.3s ease-in-out;
-}
-
-.question-container-enter, .question-container-leave-to {
-  transform: translateX(100%);
 }
 
 /* Global Font Sizes - Relative to Screen Size */
@@ -445,5 +436,20 @@ body {
 
 .modal-content button {
   font-size: 1rem;
+}
+
+.fade-question-enter-active,
+.fade-question-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-question-enter-from {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.fade-question-leave-to {
+  opacity: 0;
+  transform: translateX(-40px);
 }
 </style>

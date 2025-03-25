@@ -28,19 +28,20 @@
       <!-- Profile Options -->
 
       <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
-        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition" @click="goToProfile">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'file-invoice']" />
+        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition"
+                @click="goToProfile">
+          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'file-invoice']"/>
           <span class="text-lg font-medium">Edit profile information</span>
         </button>
         <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'bell']" />
+          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'bell']"/>
           <div class="flex justify-between w-full items-center">
             <span class="text-lg font-medium">Notifications</span>
             <span class="text-blue-500 font-semibold text-right mr-3">ON</span>
           </div>
         </button>
         <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'language']" />
+          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'language']"/>
           <div class="flex justify-between w-full items-center">
             <span class="text-lg font-medium">Language</span>
             <span class="text-blue-500 font-semibold text-right mr-3">English</span>
@@ -48,40 +49,55 @@
         </button>
       </div>
 
-      <!-- Security & Theme -->
-      <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
-        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'shield-halved']" />
-          <span class="text-lg font-medium">Security</span>
-        </button>
-        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'palette']" />
-          <div class="flex justify-between w-full items-center">
-            <span class="text-lg font-medium">Theme</span>
-            <span class="text-blue-500 font-semibold text-right mr-3">Light Mode</span>
-          </div>
-        </button>
-      </div>
+      <!--      &lt;!&ndash; Security & Theme &ndash;&gt;-->
+      <!--      <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">-->
+      <!--        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">-->
+      <!--          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'shield-halved']" />-->
+      <!--          <span class="text-lg font-medium">Security</span>-->
+      <!--        </button>-->
+      <!--        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">-->
+      <!--          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'palette']" />-->
+      <!--          <div class="flex justify-between w-full items-center">-->
+      <!--            <span class="text-lg font-medium">Theme</span>-->
+      <!--            <span class="text-blue-500 font-semibold text-right mr-3">Light Mode</span>-->
+      <!--          </div>-->
+      <!--        </button>-->
+      <!--      </div>-->
 
       <!-- Help & Support -->
       <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
         <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'info']" />
+          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'info']"/>
           <span class="text-lg font-medium">Help & Support</span>
         </button>
         <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'headset']" />
+          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'headset']"/>
           <span class="text-lg font-medium">Contact Us</span>
         </button>
         <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
-          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'lock']" />
+          <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'lock']"/>
           <span class="text-lg font-medium">Privacy Policy</span>
         </button>
       </div>
 
+      <!-- Connect to Spotify -->
+      <!-- Connect to Spotify -->
+      <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
+        <button
+            @click="connectToSpotify"
+            class="p-3 flex items-center justify-center gap-4 w-full bg-black text-white font-semibold rounded-md text-lg"
+        >
+          <img src="@/assets/spotify-green.png" alt="Spotify Logo" class="h-8 w-8"/>
+          <span v-if="!spotifyConnected">Connect to Spotify</span>
+          <span v-else>{{ spotifyDisplayName }}</span>
+        </button>
+      </div>
+
+
       <!-- Logout Button -->
       <div class="mt-6 w-5/6 mb-20 flex flex-col justify-center">
-        <button @click="logout" class="bg-red-500 text-white w-full py-3 rounded-md font-semibold hover:bg-red-600 transition">
+        <button @click="logout"
+                class="bg-red-500 text-white w-full py-3 rounded-md font-semibold hover:bg-red-600 transition">
           Logout
         </button>
       </div>
@@ -93,7 +109,12 @@
 
 
 <script>
-import {fetchUserProfile} from "@/utils/api";
+import {
+  fetchUserProfile,
+  checkSpotifyConnection,
+  spotifyLogin,
+  getSpotifyProfile
+} from "@/utils/api";
 import logo from "@/assets/New Logo.png";
 import defaultProfilePic from "@/assets/avatar-default.svg";
 
@@ -108,10 +129,13 @@ export default {
       profile_picture: "",
       logo: logo,
       defaultProfilePic: defaultProfilePic,
+      spotifyConnected: false,
+      spotifyDisplayName: "",
     };
   },
   mounted() {
     this.loadProfileData();
+    this.checkSpotifyConnection();
   },
   methods: {
     goToProfile() {
@@ -135,6 +159,31 @@ export default {
         this.$router.push("/login"); // Redirect to login page after logging out
       } catch (error) {
         console.error("Failed to logout:", error);
+      }
+    },
+    async connectToSpotify() {
+      const res = await spotifyLogin();
+      window.location.href = res.auth_url;
+    },
+    async checkSpotifyConnection() {
+      try {
+        const res = await checkSpotifyConnection();
+        this.spotifyConnected = res.connected;
+        if (this.spotifyConnected) {
+          await this.getSpotifyProfile();
+        } else {
+          console.log("User has not connected Spotify.");
+        }
+      } catch (error) {
+        console.error("Error checking Spotify connection:", error);
+      }
+    },
+    async getSpotifyProfile() {
+      try {
+        const profile = await getSpotifyProfile();
+        this.spotifyDisplayName = profile.display_name || "Spotify User";
+      } catch (error) {
+        console.error("Failed to fetch Spotify profile:", error);
       }
     },
   },
