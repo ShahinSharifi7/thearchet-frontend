@@ -8,6 +8,10 @@
     </div>
 
     <div class="h-full w-full flex flex-col items-center p-4">
+      <!--    loading -->
+      <div v-if="loading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
+        <div class="loader"></div>
+      </div>
       <FullCalendar ref="fullCalendar" :options="calendarOptions" class="w-full h-full border-2 border-gray-100"/>
       <div style="height: 50px"></div>
       <Dialog v-if="selectedEvents.length" @close="selectedEvents = []"
@@ -64,123 +68,11 @@ export default {
       logo: logo,
       selectedDate: null,
       selectedEvents: [],
+      loading: false,
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
-        events: [
-          // {
-          //   id: 1,
-          //   title: 'Edith Piaf',
-          //   start: '2025-03-20',
-          //   location: 'Le Balcon - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/edith-piaf'
-          // },
-          // {
-          //   id: 2,
-          //   title: 'Maruja (18+ Event)',
-          //   start: '2025-03-21',
-          //   location: 'Bar Le Ritz PDB - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/maruja-(18+)'
-          // },
-          // {
-          //   id: 3,
-          //   title: 'Jelly Roll',
-          //   start: '2025-03-25',
-          //   location: 'Place Bell - Laval QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/jelly-roll'
-          // },
-          // {
-          //   id: 4,
-          //   title: 'Nate Smith',
-          //   start: '2025-03-27',
-          //   location: 'MTELUS - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/nate-smith'
-          // },
-          // {
-          //   id: 5,
-          //   title: 'Kylie Minogue',
-          //   start: '2025-03-30',
-          //   location: 'Bell Centre - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/kylie-minogue'
-          // },
-          // {
-          //   id: 6,
-          //   title: 'J Balvin',
-          //   start: '2025-04-07',
-          //   location: 'Place Des Arts - Salle Wilfrid Pelletier - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/j-balvin-place-bell-laval-4-7-2025-5366905'
-          // },
-          // {
-          //   id: 7,
-          //   title: 'Elderbrook',
-          //   start: '2025-04-26',
-          //   location: 'MTELUS - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/elderbrook-mtelus-montreal-4-26-2025-5359927'
-          // },
-          // {
-          //   id: 8,
-          //   title: 'Brit Floyd',
-          //   start: '2025-04-16',
-          //   location: 'Place Des Arts - Salle Wilfrid Pelletier - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/brit-floyd-place-des-arts-salle-wilfrid-pelletier-montreal-4-16-2025-5294660'
-          // },
-          // {
-          //   id: 9,
-          //   title: 'Hocus Pocus',
-          //   start: '2025-04-24',
-          //   location: 'Place Des Arts - Cinquieme Salle - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/hocus-pocus-place-des-arts-cinquieme-salle-montreal-4-24-2025-5085462'
-          // },
-          // {
-          //   id: 10,
-          //   title: 'Pouya',
-          //   start: '2025-05-03',
-          //   location: 'Club Soda - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/pouya-club-soda-montreal-5-3-2025-5558157'
-          // },
-          // {
-          //   id: 11,
-          //   title: 'Evan Hone',
-          //   start: '2025-05-09',
-          //   location: 'Le Studio TD - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/evan-honer-le-studio-td-montreal-5-9-2025-5399549'
-          // },
-          // {
-          //   id: 12,
-          //   title: 'Alessia Cara',
-          //   start: '2025-05-14',
-          //   location: 'MTELUS - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/alessia-cara-mtelus-montreal-5-14-2025-5564244'
-          // },
-          // {
-          //   id: 13,
-          //   title: 'Dean Lewis',
-          //   start: '2025-05-17',
-          //   location: 'Place Bell - Laval QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/dean-lewis-place-bell-laval-5-17-2025-5022710'
-          // },
-          // {
-          //   id: 14,
-          //   title: 'Shakira',
-          //   start: '2025-05-20',
-          //   location: 'Bell Centre - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/shakira-(rescheduled-from-12102024)-bell-centre-montreal-5-20-2025-4933904'
-          // },
-          // {
-          //   id: 15,
-          //   title: 'Jet',
-          //   start: '2025-05-28',
-          //   location: 'LOlympia Montreal - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/jet-lolympia-montreal-montreal-5-28-2025-5511935'
-          // },
-          // {
-          //   id: 16,
-          //   title: 'Barry Manilow',
-          //   start: '2025-05-30',
-          //   location: 'Bell Centre - Montreal QC',
-          //   link: 'https://www.ticketsonsale.com/tickets/barry-manilow-bell-centre-montreal-5-30-2025-5423649'
-          // }
-        ],
+        events: [],
         dateClick: this.handleDateClick,
         datesSet: this.handleDatesSet,
       },
@@ -229,6 +121,7 @@ export default {
     async handleDatesSet(info) {
       if (!this.geoReady) return;
 
+      this.loading = true;
       const startDate = info.startStr;
       const endDate = info.endStr;
 
@@ -247,11 +140,24 @@ export default {
             link: event.url
           }))
       );
+      this.loading = false;
     },
   }
 };
 </script>
 
 <style scoped>
-/* Custom styling to match your design */
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #b7372b;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
