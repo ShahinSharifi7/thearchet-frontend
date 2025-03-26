@@ -110,6 +110,11 @@ export const spotifyLogin = async () => {
 }
 
 export const fetchSpotifyTopGenres = async () => {
-    const response = await api.get("/spotify/top-genres");
+    const response = await api.get("/spotify/top-genres/");
     return response.data.top_genres;
 };
+
+export const nearbyEvents = async (lat, lon, start, end) => {
+    const response = await api.get(`/events/nearby-events?lat=${lat}&lon=${lon}&start=${start}&end=${end}`)
+    return response.data;
+}
