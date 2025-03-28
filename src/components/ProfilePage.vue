@@ -157,7 +157,7 @@ export default {
       this.$router.push({ name: 'MatchingQuestions' });
     },
     goToMessagePage() {
-      this.$router.push({ name: 'NewMessage', params: { username: this.$route.params.username } });
+      this.$router.push({ name: 'NewMessage', query: { username: this.$route.params.username } });
     }
   },
   computed: {
