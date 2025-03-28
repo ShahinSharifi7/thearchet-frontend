@@ -118,3 +118,7 @@ export const nearbyEvents = async (lat, lon, start, end) => {
     const response = await api.get(`/events/nearby-events?lat=${lat}&lon=${lon}&start=${start}&end=${end}`)
     return response.data;
 }
+
+export const deleteMessage = async (id) => {
+    await api.post('/message/delete/', {id: id});
+}

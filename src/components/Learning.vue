@@ -72,6 +72,32 @@
     </div>
 
     <div style="height: 100px"></div>
+    <!-- Reserve Class Modal -->
+    <transition name="fade">
+      <div v-if="showScheduleModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-11/12 max-w-md shadow-lg">
+          <h3 class="text-lg font-bold mb-4 text-center">Reserve a Class with {{ selectedInstructor?.name }}</h3>
+
+          <div class="space-y-3">
+            <div class="text-sm text-gray-700"><strong>Instrument:</strong> {{ selectedInstructor.instrument }}</div>
+            <div class="text-sm text-gray-700"><strong>Days:</strong> {{ selectedInstructor.scheduleDays }}</div>
+            <div class="text-sm text-gray-700"><strong>Time:</strong> {{ selectedInstructor.scheduleTime }}</div>
+
+            <label class="block text-sm font-medium text-gray-700 mt-4">Preferred Date</label>
+            <input type="date" v-model="preferredDate" class="w-full border rounded-md p-2"/>
+
+            <label class="block text-sm font-medium text-gray-700">Preferred Time</label>
+            <input type="time" v-model="preferredTime" class="w-full border rounded-md p-2"/>
+
+            <button @click="submitSchedule" class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 mt-4">
+              Confirm Reservation
+            </button>
+            <button @click="closeScheduleModal" class="w-full mt-2 text-red-600 underline text-sm">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -88,6 +114,10 @@ export default {
       selectedInstrument: "",
       defaultProfilePic: defaultProfilePic,
       selectedLevel: "",
+      showScheduleModal: false,
+      selectedInstructor: null,
+      preferredDate: '',
+      preferredTime: '',
       videos: [
         {instrument: "Electric Guitar", level: "Beginner", url: "https://www.youtube.com/embed/RY3AvEGKfZ0"},
         {instrument: "Acoustic Guitar", level: "Beginner", url: "https://www.youtube.com/embed/pfQVtapbFms"},
@@ -194,13 +224,36 @@ export default {
       console.log("Filtering by:", this.selectedInstrument, this.selectedLevel);
     },
     setSchedule(instructor) {
-      console.log("Setting schedule for:", instructor.name);
-      // You can implement this method to navigate to a scheduling page or pop up a form
-    }
+      this.selectedInstructor = instructor;
+      this.showScheduleModal = true;
+    },
+    closeScheduleModal() {
+      this.showScheduleModal = false;
+      this.selectedInstructor = null;
+      this.preferredDate = '';
+      this.preferredTime = '';
+    },
+    submitSchedule() {
+      if (!this.preferredDate || !this.preferredTime) {
+        alert("Please select both date and time.");
+        return;
+      }
+
+      // Here, you can send the reservation to your backend via API.
+      alert(`Reserved a class with ${this.selectedInstructor.name} on ${this.preferredDate} at ${this.preferredTime}`);
+
+      this.closeScheduleModal();
+    },
   }
 };
 </script>
 
 <style scoped>
-/* Add any specific styling for the courses section */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 </style>

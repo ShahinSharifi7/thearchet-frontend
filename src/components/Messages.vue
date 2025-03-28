@@ -16,11 +16,11 @@
         Received
       </button>
 
-      <button @click="createNewMessage"
-              class="bg-black text-white px-5 py-2 mx-2 rounded-full shadow-md flex items-center gap-2">
-        <font-awesome-icon icon="plus"/>
-        New
-      </button>
+<!--      <button @click="createNewMessage"-->
+<!--              class="bg-black text-white px-5 py-2 mx-2 rounded-full shadow-md flex items-center gap-2">-->
+<!--        <font-awesome-icon icon="plus"/>-->
+<!--        New-->
+<!--      </button>-->
 
       <button
           @click="setActiveTab('sent')"
@@ -78,7 +78,7 @@
 
       <ul v-if="activeTab === 'sent'" class="space-y-2">
         <li v-for="message in sentMessages" :key="message.id"
-            class="flex items-center bg-white shadow rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition"
+            class="relative flex items-center bg-white shadow rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition"
             @click="viewMessage(message.id)">
 
           <!-- Profile Picture -->
@@ -122,7 +122,7 @@
 <script>
 import logo from "@/assets/New Logo.png";
 import defaultProfilePic from "@/assets/avatar-default.svg";
-import {sentMessages, receivedMessages} from "@/utils/api.js"
+import {sentMessages, receivedMessages, deleteMessage} from "@/utils/api.js"
 import { format } from 'date-fns';
 
 
@@ -152,19 +152,32 @@ export default {
         this.sentMessages = response.results;
       }
     },
-    createNewMessage() {
-      this.$router.push("/new-message");
-    },
     viewMessage(id) {
       this.$router.push({ name: 'MessageDetail', params: { messageId: id } });
     },
     replyMessage(message) {
-      console.log("Replying to:", message);
-      // Implement reply logic
+      this.$router.push({
+        path: '/new-message',
+        query: {
+          username: message.sender.username,
+          subject: message.subject,
+          parentId: message.id
+        }
+      });
     },
-    deleteMessage(id) {
-      console.log("Deleting message:", id);
-      // Implement delete logic
+    async deleteMessage(id) {
+      if (!confirm("Are you sure you want to delete this message?")) return;
+
+      try {
+        await deleteMessage(id);
+
+        alert("Message deleted successfully.");
+        await this.setActiveTab(this.activeTab); // Refresh messages
+
+      } catch (error) {
+        console.error("Failed to delete message:", error);
+        alert("Error deleting message.");
+      }
     },
     formatDate(dateString) {
       const date = new Date(dateString);

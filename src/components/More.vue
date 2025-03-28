@@ -70,7 +70,7 @@
           <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'info']"/>
           <span class="text-lg font-medium">Help & Support</span>
         </button>
-        <button class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
+        <button @click="$router.push('/contact-us');" class="p-3 flex items-center justify-start text-left w-full hover:bg-gray-100 transition">
           <font-awesome-icon class="w-6 h-6 mx-3 text-gray-600" :icon="['fas', 'headset']"/>
           <span class="text-lg font-medium">Contact Us</span>
         </button>
@@ -80,7 +80,6 @@
         </button>
       </div>
 
-      <!-- Connect to Spotify -->
       <!-- Connect to Spotify -->
       <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
         <button
@@ -97,7 +96,7 @@
       <!-- Logout Button -->
       <div class="mt-6 w-5/6 mb-20 flex flex-col justify-center">
         <button @click="logout"
-                class="bg-red-500 text-white w-full py-3 rounded-md font-semibold hover:bg-red-600 transition">
+                class="bg-[#C00000] text-white w-full py-3 rounded-md font-semibold hover:bg-red-600 transition">
           Logout
         </button>
       </div>

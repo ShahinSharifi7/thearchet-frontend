@@ -148,6 +148,7 @@ export default {
         alert("Passwords do not match");
         return;
       }
+
       try {
         const VUE_APP_API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
         const response = await axios.post(`${VUE_APP_API_BASE_URL}api/user/register/`, {
@@ -161,7 +162,22 @@ export default {
 
         this.$router.push("/login");
       } catch (err) {
-        alert("Registration failed! " + (err.response?.data?.detail || ""));
+        // Show detailed backend validation errors
+        if (err.response && err.response.data) {
+          const errors = err.response.data;
+          let errorMessages = [];
+
+          for (const field in errors) {
+            const fieldErrors = Array.isArray(errors[field]) ? errors[field] : [errors[field]];
+            fieldErrors.forEach(msg => {
+              errorMessages.push(`${field}: ${msg}`);
+            });
+          }
+
+          alert("Registration failed:\n" + errorMessages.join("\n"));
+        } else {
+          alert("Registration failed! Please try again.");
+        }
       }
     },
     showPrivacyPolicy() {
