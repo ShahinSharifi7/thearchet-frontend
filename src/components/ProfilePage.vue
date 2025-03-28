@@ -92,7 +92,9 @@
       </div>
 
       <!-- Spacing for UI -->
-      <div style="height: 50px"></div>
+      <div class="h-20">
+
+      </div>
     </div>
   </div>
 </template>

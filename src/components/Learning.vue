@@ -83,11 +83,26 @@
             <div class="text-sm text-gray-700"><strong>Days:</strong> {{ selectedInstructor.scheduleDays }}</div>
             <div class="text-sm text-gray-700"><strong>Time:</strong> {{ selectedInstructor.scheduleTime }}</div>
 
-            <label class="block text-sm font-medium text-gray-700 mt-4">Preferred Date</label>
+            <label class="block text-sm font-medium text-gray-700 mt-4">Select Date</label>
             <input type="date" v-model="preferredDate" class="w-full border rounded-md p-2"/>
 
-            <label class="block text-sm font-medium text-gray-700">Preferred Time</label>
-            <input type="time" v-model="preferredTime" class="w-full border rounded-md p-2"/>
+            <div v-if="preferredDate" class="mt-4">
+              <label class="block text-sm font-medium text-gray-700">Choose Time Slot</label>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <button
+                    v-for="slot in timeSlots"
+                    :key="slot.time"
+                    :disabled="slot.reserved"
+                    :class="[
+                      'py-2 px-3 rounded text-sm font-semibold border',
+                      selectedSlot === slot.time ? 'bg-red-600 text-white' : 'bg-white text-gray-800',
+                      slot.reserved ? 'opacity-50 cursor-not-allowed bg-gray-200' : 'hover:bg-red-100'
+                    ]"
+                    @click="selectSlot(slot.time)">
+                  {{ slot.time }} <span v-if="slot.reserved">(Reserved)</span>
+                </button>
+              </div>
+            </div>
 
             <button @click="submitSchedule" class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 mt-4">
               Confirm Reservation
@@ -118,6 +133,8 @@ export default {
       selectedInstructor: null,
       preferredDate: '',
       preferredTime: '',
+      timeSlots: [],
+      selectedSlot: null,
       videos: [
         {instrument: "Electric Guitar", level: "Beginner", url: "https://www.youtube.com/embed/RY3AvEGKfZ0"},
         {instrument: "Acoustic Guitar", level: "Beginner", url: "https://www.youtube.com/embed/pfQVtapbFms"},
@@ -216,6 +233,13 @@ export default {
       );
     }
   },
+  watch: {
+    preferredDate() {
+      if (this.selectedInstructor) {
+        this.timeSlots = this.generateTimeSlots(this.selectedInstructor.scheduleTime);
+      }
+    }
+  },
   methods: {
     setActiveTab(tab) {
       this.activeTab = tab;
@@ -225,25 +249,62 @@ export default {
     },
     setSchedule(instructor) {
       this.selectedInstructor = instructor;
+      this.preferredDate = '';
+      this.selectedSlot = null;
+      this.timeSlots = [];  // Will be generated when date is picked
       this.showScheduleModal = true;
     },
     closeScheduleModal() {
       this.showScheduleModal = false;
       this.selectedInstructor = null;
       this.preferredDate = '';
-      this.preferredTime = '';
+      this.selectedSlot = null;
     },
     submitSchedule() {
-      if (!this.preferredDate || !this.preferredTime) {
-        alert("Please select both date and time.");
+      if (!this.selectedSlot || !this.preferredDate) {
+        alert("Please select both a date and a time slot.");
         return;
       }
-
-      // Here, you can send the reservation to your backend via API.
-      alert(`Reserved a class with ${this.selectedInstructor.name} on ${this.preferredDate} at ${this.preferredTime}`);
-
+      alert(`Reserved a class with ${this.selectedInstructor.name} on ${this.preferredDate} at ${this.selectedSlot}`);
       this.closeScheduleModal();
     },
+    selectSlot(slotTime) {
+      this.selectedSlot = slotTime;
+    },
+    generateTimeSlots(timeRange) {
+      const [startStr, endStr] = timeRange.split(' to ');
+      const startHour = this.convertTo24Hour(startStr.trim());
+      const endHour = this.convertTo24Hour(endStr.trim());
+
+      const slots = [];
+      for (let h = startHour; h < endHour; h++) {
+        const slotLabel = `${this.formatHour(h)} - ${this.formatHour(h + 1)}`;
+        const seed = this.preferredDate + slotLabel;
+        const reserved = this.hashString(seed) % 10 < 3;
+        slots.push({ time: slotLabel, reserved });
+      }
+      return slots;
+    },
+    convertTo24Hour(timeStr) {
+      const [time, modifier] = timeStr.split(' ');
+      let [hours] = time.split(':').map(Number);
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+      return hours;
+    },
+    formatHour(hour) {
+      const suffix = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = ((hour + 11) % 12 + 1);
+      return `${displayHour}:00 ${suffix}`;
+    },
+    hashString(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
   }
 };
 </script>
@@ -255,5 +316,7 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
+button[disabled] {
+  cursor: not-allowed;
+}
 </style>

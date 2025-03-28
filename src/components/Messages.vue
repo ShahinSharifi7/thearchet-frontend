@@ -12,7 +12,7 @@
       <button
           @click="setActiveTab('received')"
           :class="activeTab === 'received' ? 'bg-red-500 text-white shadow-lg' : 'bg-[#E9C3BF] text-gray-800 hover:bg-[#d98d89]'"
-          class="py-3 w-1/3 font-semibold transition-all duration-100 rounded-b-2xl">
+          class="py-3 w-1/2 font-semibold transition-all duration-100 rounded-b-2xl">
         Received
       </button>
 
@@ -25,7 +25,7 @@
       <button
           @click="setActiveTab('sent')"
           :class="activeTab === 'sent' ? 'bg-red-500 text-white shadow-lg' : 'bg-[#E9C3BF] text-gray-800 hover:bg-[#d98d89]'"
-          class="py-3 w-1/3 font-semibold transition-all duration-100 rounded-b-2xl">
+          class="py-3 w-1/2 font-semibold transition-all duration-100 rounded-b-2xl">
         Sent
       </button>
     </div>
