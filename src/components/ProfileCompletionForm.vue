@@ -321,7 +321,7 @@ export default {
         this.social_links.instagram = profileData.instagram || "";
         this.social_links.youtube = profileData.youtube || "";
         this.social_links.spotify = profileData.spotify || "";
-        this.social_links.spotify = profileData.soundcloud || "";
+        this.social_links.soundcloud = profileData.soundcloud || "";
         this.social_links.apple_music = profileData.apple_music || "";
 
         this.redirectToQuestions = this.$route.query.redirectToQuestions === 'true';
