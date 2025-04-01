@@ -28,24 +28,27 @@
           </p>
         </div>
 
-        <!-- Connect to Spotify -->
-        <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
+        <!-- Button Container with Fixed Width -->
+        <div class="w-5/6 mt-4 flex flex-col items-center gap-4">
+          <!-- Spotify Button -->
           <button
               @click="connectToSpotify"
-              class="p-3 flex items-center justify-center gap-4 w-full bg-black text-white font-semibold rounded-md text-lg"
+              class="min-h-[56px] w-full p-3 flex items-center justify-center gap-4 bg-black text-white font-semibold rounded-md text-lg"
           >
-            <img src="@/assets/spotify-green.png" alt="Spotify Logo" class="h-8 w-8"/>
+            <img src="@/assets/spotify-green.png" alt="Spotify Logo" class="h-8 w-8" />
             <span v-if="!spotifyConnected">Connect to Spotify</span>
             <span v-else>{{ spotifyDisplayName }}</span>
           </button>
+
+          <!-- Quiz Button -->
+          <button
+              @click="startQuiz"
+              class="min-h-[56px] w-full bg-red-600 text-white rounded-md text-lg font-semibold transition-all hover:bg-red-700"
+          >
+            Let's Get Started!
+          </button>
         </div>
 
-        <button
-            @click="startQuiz"
-            class="px-6 py-3 mt-6 bg-red-600 text-white rounded-lg text-lg font-semibold transition-all hover:bg-red-700"
-        >
-          Let's Get Started!
-        </button>
       </div>
     </template>
 
@@ -174,19 +177,30 @@ export default {
       hasSuggestion: false,
       suggestedInstrumentImageUrl: "",
       spotifyConnected: false,
+      spotifyDisplayName: "",
     };
   },
   async mounted() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromSpotify = urlParams.get("from") === "spotify";
+
+    if (fromSpotify) {
+      this.showWelcomeScreen = true;
+
+      // Optional: Clean the URL after handling
+      const newUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+
     const lastSuggestion = await fetchLastInstrumentSuggestion();
     if (lastSuggestion && lastSuggestion.suggested_instrument) {
       this.hasSuggestion = true;
       this.suggestedInstrument = lastSuggestion.suggested_instrument.name;
       this.suggestedInstrumentImageUrl = require(`@/assets/${this.suggestedInstrument}.png`);
     } else {
-      await this.checkSpotifyConnection();
       this.questions = await fetchInstrumentQuestions();
+      await this.checkSpotifyConnection();
     }
-    this.checkSpotifyConnection();
   },
   computed: {
     allQuestionsAnswered() {
@@ -225,7 +239,7 @@ export default {
       this.responses = {};
       this.currentIndex = 0;
       this.questions = await fetchInstrumentQuestions();
-      await this.checkSpotifyConnectionMethod();
+      await this.checkSpotifyConnection();
     },
     toStore() {
       this.$router.push({ name: 'StorePage'});
@@ -237,7 +251,6 @@ export default {
       const genres = await fetchSpotifyTopGenres();
       if (this.questions)
         this.responses[this.questions[12].label] = genres[0];
-      console.log("Spotify profile:", genres);
     },
     async checkSpotifyConnection() {
       try {
@@ -245,6 +258,7 @@ export default {
         this.spotifyConnected = res.connected;
         if (this.spotifyConnected) {
           await this.fetchSpotifyTopGenres();
+          await this.getSpotifyProfile();
         } else {
           console.log("User has not connected Spotify.");
         }
@@ -255,19 +269,6 @@ export default {
     async connectToSpotify() {
       const res = await spotifyLogin();
       window.location.href = res.auth_url;
-    },
-    async checkSpotifyConnectionMethod() {
-      try {
-        const res = await checkSpotifyConnection();
-        this.spotifyConnected = res.connected;
-        if (this.spotifyConnected) {
-          await this.getSpotifyProfile();
-        } else {
-          console.log("User has not connected Spotify.");
-        }
-      } catch (error) {
-        console.error("Error checking Spotify connection:", error);
-      }
     },
     async getSpotifyProfile() {
       try {

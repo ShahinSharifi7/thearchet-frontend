@@ -110,13 +110,10 @@ export default {
       profile_picture: "",
       logo: logo,
       defaultProfilePic: defaultProfilePic,
-      spotifyConnected: false,
-      spotifyDisplayName: "",
     };
   },
   mounted() {
     this.loadProfileData();
-    this.checkSpotifyConnection();
   },
   methods: {
     goToProfile() {
