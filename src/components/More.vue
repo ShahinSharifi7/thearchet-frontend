@@ -80,19 +80,6 @@
         </button>
       </div>
 
-      <!-- Connect to Spotify -->
-      <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
-        <button
-            @click="connectToSpotify"
-            class="p-3 flex items-center justify-center gap-4 w-full bg-black text-white font-semibold rounded-md text-lg"
-        >
-          <img src="@/assets/spotify-green.png" alt="Spotify Logo" class="h-8 w-8"/>
-          <span v-if="!spotifyConnected">Connect to Spotify</span>
-          <span v-else>{{ spotifyDisplayName }}</span>
-        </button>
-      </div>
-
-
       <!-- Logout Button -->
       <div class="mt-6 w-5/6 mb-20 flex flex-col justify-center">
         <button @click="logout"
@@ -108,12 +95,7 @@
 
 
 <script>
-import {
-  fetchUserProfile,
-  checkSpotifyConnection,
-  spotifyLogin,
-  getSpotifyProfile
-} from "@/utils/api";
+import {fetchUserProfile} from "@/utils/api";
 import logo from "@/assets/New Logo.png";
 import defaultProfilePic from "@/assets/avatar-default.svg";
 
@@ -158,31 +140,6 @@ export default {
         this.$router.push("/login"); // Redirect to login page after logging out
       } catch (error) {
         console.error("Failed to logout:", error);
-      }
-    },
-    async connectToSpotify() {
-      const res = await spotifyLogin();
-      window.location.href = res.auth_url;
-    },
-    async checkSpotifyConnection() {
-      try {
-        const res = await checkSpotifyConnection();
-        this.spotifyConnected = res.connected;
-        if (this.spotifyConnected) {
-          await this.getSpotifyProfile();
-        } else {
-          console.log("User has not connected Spotify.");
-        }
-      } catch (error) {
-        console.error("Error checking Spotify connection:", error);
-      }
-    },
-    async getSpotifyProfile() {
-      try {
-        const profile = await getSpotifyProfile();
-        this.spotifyDisplayName = profile.display_name || "Spotify User";
-      } catch (error) {
-        console.error("Failed to fetch Spotify profile:", error);
       }
     },
   },

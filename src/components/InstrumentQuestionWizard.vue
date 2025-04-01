@@ -27,6 +27,19 @@
             No more trial and error! Start with confidence!
           </p>
         </div>
+
+        <!-- Connect to Spotify -->
+        <div class="shadow-lg w-5/6 mt-4 flex flex-col rounded-md border-2 border-gray-100">
+          <button
+              @click="connectToSpotify"
+              class="p-3 flex items-center justify-center gap-4 w-full bg-black text-white font-semibold rounded-md text-lg"
+          >
+            <img src="@/assets/spotify-green.png" alt="Spotify Logo" class="h-8 w-8"/>
+            <span v-if="!spotifyConnected">Connect to Spotify</span>
+            <span v-else>{{ spotifyDisplayName }}</span>
+          </button>
+        </div>
+
         <button
             @click="startQuiz"
             class="px-6 py-3 mt-6 bg-red-600 text-white rounded-lg text-lg font-semibold transition-all hover:bg-red-700"
@@ -145,7 +158,7 @@ import {
   fetchInstrumentQuestions,
   submitInstrumentSuggestionAnswers,
   fetchLastInstrumentSuggestion,
-  fetchSpotifyTopGenres, checkSpotifyConnection,
+  fetchSpotifyTopGenres, checkSpotifyConnection, spotifyLogin, getSpotifyProfile,
 } from "@/utils/api";
 import logo from "@/assets/New Logo.png";
 
@@ -173,6 +186,7 @@ export default {
       await this.checkSpotifyConnection();
       this.questions = await fetchInstrumentQuestions();
     }
+    this.checkSpotifyConnection();
   },
   computed: {
     allQuestionsAnswered() {
@@ -211,7 +225,7 @@ export default {
       this.responses = {};
       this.currentIndex = 0;
       this.questions = await fetchInstrumentQuestions();
-      await this.checkSpotifyConnection();
+      await this.checkSpotifyConnectionMethod();
     },
     toStore() {
       this.$router.push({ name: 'StorePage'});
@@ -236,6 +250,31 @@ export default {
         }
       } catch (error) {
         console.error("Error checking Spotify connection:", error);
+      }
+    },
+    async connectToSpotify() {
+      const res = await spotifyLogin();
+      window.location.href = res.auth_url;
+    },
+    async checkSpotifyConnectionMethod() {
+      try {
+        const res = await checkSpotifyConnection();
+        this.spotifyConnected = res.connected;
+        if (this.spotifyConnected) {
+          await this.getSpotifyProfile();
+        } else {
+          console.log("User has not connected Spotify.");
+        }
+      } catch (error) {
+        console.error("Error checking Spotify connection:", error);
+      }
+    },
+    async getSpotifyProfile() {
+      try {
+        const profile = await getSpotifyProfile();
+        this.spotifyDisplayName = profile.display_name || "Spotify User";
+      } catch (error) {
+        console.error("Failed to fetch Spotify profile:", error);
       }
     },
   },
