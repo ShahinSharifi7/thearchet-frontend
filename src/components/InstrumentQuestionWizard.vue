@@ -183,17 +183,19 @@ export default {
   async mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     const fromSpotify = urlParams.get("from") === "spotify";
+    const lastSuggestion = await fetchLastInstrumentSuggestion();
 
     if (fromSpotify) {
-      this.showWelcomeScreen = true;
 
+      this.showWelcomeScreen = true;
       // Optional: Clean the URL after handling
       const newUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
-    }
+      this.questions = await fetchInstrumentQuestions();
+      await this.checkSpotifyConnection();
 
-    const lastSuggestion = await fetchLastInstrumentSuggestion();
-    if (lastSuggestion && lastSuggestion.suggested_instrument) {
+    }
+    else if (lastSuggestion && lastSuggestion.suggested_instrument) {
       this.hasSuggestion = true;
       this.suggestedInstrument = lastSuggestion.suggested_instrument.name;
       this.suggestedInstrumentImageUrl = require(`@/assets/${this.suggestedInstrument}.png`);
